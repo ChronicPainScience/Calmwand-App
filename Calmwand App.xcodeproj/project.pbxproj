@@ -1,0 +1,423 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 70;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		113DB9EB2CDAD4A800BC179B /* Classes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113DB9EA2CDAD4A800BC179B /* Classes.swift */; };
+		113DB9EF2CDC10ED00BC179B /* Plot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113DB9EE2CDC10E800BC179B /* Plot.swift */; };
+		114167732CB6FFD80048C396 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114167722CB6FFD80048C396 /* BluetoothManager.swift */; };
+		114167772CB7002A0048C396 /* BluetoothConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114167762CB7002A0048C396 /* BluetoothConnection.swift */; };
+		1177C4B12D532A7C002654F4 /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1177C4B02D532A78002654F4 /* ViewModifier.swift */; };
+		11AB481C2D66FCCD00E1FDB8 /* CSVDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AB481B2D66FCCD00E1FDB8 /* CSVDocument.swift */; };
+		11D9BFC32C87C05900173479 /* Calmwand_App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D9BFC22C87C05900173479 /* Calmwand_App.swift */; };
+		11D9BFC52C87C05900173479 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D9BFC42C87C05900173479 /* HomeView.swift */; };
+		11D9BFC72C87C05900173479 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D9BFC62C87C05900173479 /* Item.swift */; };
+		11D9BFC92C87C05A00173479 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 11D9BFC82C87C05A00173479 /* Assets.xcassets */; };
+		11D9BFCC2C87C05A00173479 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 11D9BFCB2C87C05A00173479 /* Preview Assets.xcassets */; };
+		11D9C0322C91132000173479 /* Session History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D9C0312C91132000173479 /* Session History.swift */; };
+		11D9C0342C91134B00173479 /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D9C0332C91134B00173479 /* Setting.swift */; };
+		11D9C0362C9114AC00173479 /* Session Summary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D9C0352C9114AC00173479 /* Session Summary.swift */; };
+		3980B83F2D6D0CCC003286AE /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3980B83E2D6D0CCC003286AE /* DisclaimerView.swift */; };
+		3983FDFF2D6D25CD0096A9AA /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3983FDFE2D6D25CD0096A9AA /* InfoView.swift */; };
+		39A8B3E72D77A92300C50DD6 /* TenMinuteTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A8B3E62D77A92300C50DD6 /* TenMinuteTimerView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		113DB9EA2CDAD4A800BC179B /* Classes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Classes.swift; sourceTree = "<group>"; };
+		113DB9EE2CDC10E800BC179B /* Plot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plot.swift; sourceTree = "<group>"; };
+		114167722CB6FFD80048C396 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
+		114167762CB7002A0048C396 /* BluetoothConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothConnection.swift; sourceTree = "<group>"; };
+		1177C4B02D532A78002654F4 /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
+		11AB481B2D66FCCD00E1FDB8 /* CSVDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVDocument.swift; sourceTree = "<group>"; };
+		11D9BFBF2C87C05900173479 /* Calmwand App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Calmwand App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		11D9BFC22C87C05900173479 /* Calmwand_App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calmwand_App.swift; sourceTree = "<group>"; };
+		11D9BFC42C87C05900173479 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		11D9BFC62C87C05900173479 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		11D9BFC82C87C05A00173479 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		11D9BFCB2C87C05A00173479 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		11D9C0312C91132000173479 /* Session History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session History.swift"; sourceTree = "<group>"; };
+		11D9C0332C91134B00173479 /* Setting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setting.swift; sourceTree = "<group>"; };
+		11D9C0352C9114AC00173479 /* Session Summary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session Summary.swift"; sourceTree = "<group>"; };
+		3980B83E2D6D0CCC003286AE /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
+		3983FDFE2D6D25CD0096A9AA /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
+		398BA0F62DB0253800D83AF4 /* Calmwand-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Calmwand-App-Info.plist"; sourceTree = SOURCE_ROOT; };
+		39A8B3E62D77A92300C50DD6 /* TenMinuteTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TenMinuteTimerView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		1177C4B82D5570E8002654F4 /* Files */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Files; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		11D9BFBC2C87C05900173479 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		11D9BFB62C87C05900173479 = {
+			isa = PBXGroup;
+			children = (
+				11D9BFC12C87C05900173479 /* Calmwand App */,
+				11D9BFC02C87C05900173479 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		11D9BFC02C87C05900173479 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				11D9BFBF2C87C05900173479 /* Calmwand App.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		11D9BFC12C87C05900173479 /* Calmwand App */ = {
+			isa = PBXGroup;
+			children = (
+				398BA0F62DB0253800D83AF4 /* Calmwand-App-Info.plist */,
+				11D9BFC22C87C05900173479 /* Calmwand_App.swift */,
+				11D9BFC42C87C05900173479 /* HomeView.swift */,
+				3983FDFE2D6D25CD0096A9AA /* InfoView.swift */,
+				11D9C0352C9114AC00173479 /* Session Summary.swift */,
+				39A8B3E62D77A92300C50DD6 /* TenMinuteTimerView.swift */,
+				11D9C0332C91134B00173479 /* Setting.swift */,
+				11D9C0312C91132000173479 /* Session History.swift */,
+				11D9BFC62C87C05900173479 /* Item.swift */,
+				11AB481B2D66FCCD00E1FDB8 /* CSVDocument.swift */,
+				114167762CB7002A0048C396 /* BluetoothConnection.swift */,
+				114167722CB6FFD80048C396 /* BluetoothManager.swift */,
+				113DB9EA2CDAD4A800BC179B /* Classes.swift */,
+				1177C4B02D532A78002654F4 /* ViewModifier.swift */,
+				113DB9EE2CDC10E800BC179B /* Plot.swift */,
+				3980B83E2D6D0CCC003286AE /* DisclaimerView.swift */,
+				1177C4B82D5570E8002654F4 /* Files */,
+				11D9BFC82C87C05A00173479 /* Assets.xcassets */,
+				11D9BFCA2C87C05A00173479 /* Preview Content */,
+			);
+			path = "Calmwand App";
+			sourceTree = "<group>";
+		};
+		11D9BFCA2C87C05A00173479 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				11D9BFCB2C87C05A00173479 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		11D9BFBE2C87C05900173479 /* Calmwand App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 11D9BFCF2C87C05A00173479 /* Build configuration list for PBXNativeTarget "Calmwand App" */;
+			buildPhases = (
+				11D9BFBB2C87C05900173479 /* Sources */,
+				11D9BFBC2C87C05900173479 /* Frameworks */,
+				11D9BFBD2C87C05900173479 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1177C4B82D5570E8002654F4 /* Files */,
+			);
+			name = "Calmwand App";
+			productName = "Calmwand App";
+			productReference = 11D9BFBF2C87C05900173479 /* Calmwand App.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		11D9BFB72C87C05900173479 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					11D9BFBE2C87C05900173479 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = 11D9BFBA2C87C05900173479 /* Build configuration list for PBXProject "Calmwand App" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 11D9BFB62C87C05900173479;
+			productRefGroup = 11D9BFC02C87C05900173479 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				11D9BFBE2C87C05900173479 /* Calmwand App */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		11D9BFBD2C87C05900173479 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11D9BFCC2C87C05A00173479 /* Preview Assets.xcassets in Resources */,
+				11D9BFC92C87C05A00173479 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		11D9BFBB2C87C05900173479 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11D9C0322C91132000173479 /* Session History.swift in Sources */,
+				11D9C0362C9114AC00173479 /* Session Summary.swift in Sources */,
+				113DB9EB2CDAD4A800BC179B /* Classes.swift in Sources */,
+				39A8B3E72D77A92300C50DD6 /* TenMinuteTimerView.swift in Sources */,
+				114167772CB7002A0048C396 /* BluetoothConnection.swift in Sources */,
+				11D9C0342C91134B00173479 /* Setting.swift in Sources */,
+				114167732CB6FFD80048C396 /* BluetoothManager.swift in Sources */,
+				3983FDFF2D6D25CD0096A9AA /* InfoView.swift in Sources */,
+				11D9BFC52C87C05900173479 /* HomeView.swift in Sources */,
+				11AB481C2D66FCCD00E1FDB8 /* CSVDocument.swift in Sources */,
+				11D9BFC72C87C05900173479 /* Item.swift in Sources */,
+				3980B83F2D6D0CCC003286AE /* DisclaimerView.swift in Sources */,
+				113DB9EF2CDC10ED00BC179B /* Plot.swift in Sources */,
+				1177C4B12D532A7C002654F4 /* ViewModifier.swift in Sources */,
+				11D9BFC32C87C05900173479 /* Calmwand_App.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		11D9BFCD2C87C05A00173479 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		11D9BFCE2C87C05A00173479 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		11D9BFD02C87C05A00173479 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Calmwand App/Preview Content\"";
+				DEVELOPMENT_TEAM = 9YYXLV942L;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Calmwand-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = CalmWand;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app uses Bluetooth to connect to a handheld biofeedback device in order to collect heart rate and skin conductance data for research on stress and cognitive performance.";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Please Allow Bluetooth Connection";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chronicpain.calmwandapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		11D9BFD12C87C05A00173479 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Calmwand App/Preview Content\"";
+				DEVELOPMENT_TEAM = 9YYXLV942L;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Calmwand-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = CalmWand;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app uses Bluetooth to connect to a handheld biofeedback device in order to collect heart rate and skin conductance data for research on stress and cognitive performance.";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Please Allow Bluetooth Connection";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chronicpain.calmwandapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		11D9BFBA2C87C05900173479 /* Build configuration list for PBXProject "Calmwand App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				11D9BFCD2C87C05A00173479 /* Debug */,
+				11D9BFCE2C87C05A00173479 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		11D9BFCF2C87C05A00173479 /* Build configuration list for PBXNativeTarget "Calmwand App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				11D9BFD02C87C05A00173479 /* Debug */,
+				11D9BFD12C87C05A00173479 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 11D9BFB72C87C05900173479 /* Project object */;
+}
