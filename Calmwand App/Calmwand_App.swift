@@ -27,11 +27,26 @@ struct Calmwand_App: App {
         }
     }()
     
+    @State private var showSplash = true
+    
     var body: some Scene {
-        WindowGroup {
-            HomeView()
+            WindowGroup {
+                ZStack {                                 // ← 1. single stacking context
+                    HomeView()                           // always in background
+
+                    if showSplash {                      // ← 2. conditional splash
+                        SplashScreenView()
+                            .transition(.opacity)
+                            .zIndex(1)                   // keep on top
+                    }
+                }
                 .preferredColorScheme(.light)
+                .onAppear {                              // hide after ~1 s
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.05) {
+                        withAnimation(.easeOut) { showSplash = false }
+                    }
+                }
+            }
+            .modelContainer(sharedModelContainer)
         }
-        .modelContainer(sharedModelContainer)
-    }
 }

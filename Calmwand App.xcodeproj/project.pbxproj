@@ -21,8 +21,11 @@
 		11D9C0322C91132000173479 /* Session History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D9C0312C91132000173479 /* Session History.swift */; };
 		11D9C0342C91134B00173479 /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D9C0332C91134B00173479 /* Setting.swift */; };
 		11D9C0362C9114AC00173479 /* Session Summary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D9C0352C9114AC00173479 /* Session Summary.swift */; };
+		390C07752DD29A6100802648 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390C07742DD29A6100802648 /* ActivityView.swift */; };
+		390C07792DD29D4F00802648 /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390C07782DD29D4F00802648 /* DocumentPicker.swift */; };
 		3980B83F2D6D0CCC003286AE /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3980B83E2D6D0CCC003286AE /* DisclaimerView.swift */; };
 		3983FDFF2D6D25CD0096A9AA /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3983FDFE2D6D25CD0096A9AA /* InfoView.swift */; };
+		39A44BAE2DC92CB5001C4875 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A44BAD2DC92CB5001C4875 /* SplashScreenView.swift */; };
 		39A8B3E72D77A92300C50DD6 /* TenMinuteTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A8B3E62D77A92300C50DD6 /* TenMinuteTimerView.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,9 +45,14 @@
 		11D9C0312C91132000173479 /* Session History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session History.swift"; sourceTree = "<group>"; };
 		11D9C0332C91134B00173479 /* Setting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setting.swift; sourceTree = "<group>"; };
 		11D9C0352C9114AC00173479 /* Session Summary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session Summary.swift"; sourceTree = "<group>"; };
+		390C07742DD29A6100802648 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
+		390C07782DD29D4F00802648 /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
+		390C077A2DD29DFD00802648 /* Calmwand App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Calmwand App.entitlements"; sourceTree = "<group>"; };
 		3980B83E2D6D0CCC003286AE /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
 		3983FDFE2D6D25CD0096A9AA /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		398BA0F62DB0253800D83AF4 /* Calmwand-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Calmwand-App-Info.plist"; sourceTree = SOURCE_ROOT; };
+		3995179E2DD26EDF003FBE61 /* SessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionModel.swift; sourceTree = "<group>"; };
+		39A44BAD2DC92CB5001C4875 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		39A8B3E62D77A92300C50DD6 /* TenMinuteTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TenMinuteTimerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,6 +90,9 @@
 		11D9BFC12C87C05900173479 /* Calmwand App */ = {
 			isa = PBXGroup;
 			children = (
+				390C077A2DD29DFD00802648 /* Calmwand App.entitlements */,
+				390C07782DD29D4F00802648 /* DocumentPicker.swift */,
+				390C07742DD29A6100802648 /* ActivityView.swift */,
 				398BA0F62DB0253800D83AF4 /* Calmwand-App-Info.plist */,
 				11D9BFC22C87C05900173479 /* Calmwand_App.swift */,
 				11D9BFC42C87C05900173479 /* HomeView.swift */,
@@ -94,10 +105,12 @@
 				11AB481B2D66FCCD00E1FDB8 /* CSVDocument.swift */,
 				114167762CB7002A0048C396 /* BluetoothConnection.swift */,
 				114167722CB6FFD80048C396 /* BluetoothManager.swift */,
+				3995179E2DD26EDF003FBE61 /* SessionModel.swift */,
 				113DB9EA2CDAD4A800BC179B /* Classes.swift */,
 				1177C4B02D532A78002654F4 /* ViewModifier.swift */,
 				113DB9EE2CDC10E800BC179B /* Plot.swift */,
 				3980B83E2D6D0CCC003286AE /* DisclaimerView.swift */,
+				39A44BAD2DC92CB5001C4875 /* SplashScreenView.swift */,
 				1177C4B82D5570E8002654F4 /* Files */,
 				11D9BFC82C87C05A00173479 /* Assets.xcassets */,
 				11D9BFCA2C87C05A00173479 /* Preview Content */,
@@ -190,10 +203,13 @@
 				11D9C0362C9114AC00173479 /* Session Summary.swift in Sources */,
 				113DB9EB2CDAD4A800BC179B /* Classes.swift in Sources */,
 				39A8B3E72D77A92300C50DD6 /* TenMinuteTimerView.swift in Sources */,
+				390C07792DD29D4F00802648 /* DocumentPicker.swift in Sources */,
 				114167772CB7002A0048C396 /* BluetoothConnection.swift in Sources */,
 				11D9C0342C91134B00173479 /* Setting.swift in Sources */,
 				114167732CB6FFD80048C396 /* BluetoothManager.swift in Sources */,
+				39A44BAE2DC92CB5001C4875 /* SplashScreenView.swift in Sources */,
 				3983FDFF2D6D25CD0096A9AA /* InfoView.swift in Sources */,
+				390C07752DD29A6100802648 /* ActivityView.swift in Sources */,
 				11D9BFC52C87C05900173479 /* HomeView.swift in Sources */,
 				11AB481C2D66FCCD00E1FDB8 /* CSVDocument.swift in Sources */,
 				11D9BFC72C87C05900173479 /* Item.swift in Sources */,
@@ -332,6 +348,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = "Calmwand App/Calmwand App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Calmwand App/Preview Content\"";
@@ -367,6 +384,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = "Calmwand App/Calmwand App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Calmwand App/Preview Content\"";

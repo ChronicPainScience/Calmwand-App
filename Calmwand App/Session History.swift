@@ -38,21 +38,6 @@ struct SessionHistoryView: View {
                 .navigationTitle("Session History")
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Button("Add Session") {
-                            sessionViewModel.addSession(dur: 151,
-                                                        tempC: 5,
-                                                        inhale: 4.5,
-                                                        exhale: 9.0,
-                                                        Set: [
-                                                            93.8, 93.9, 94.2, 94.5, 94.7, 94.9, 95.1, 95.2, 95.3, 95.4,
-                                                            95.5, 95.6, 95.65, 95.7, 95.75, 95.8, 95.85, 95.9, 95.92, 95.95,
-                                                            95.97, 96.0, 96.02, 96.04, 96.05, 96.06, 96.07, 96.08, 96.09, 96.1
-                                                        ])
-                        }
-                        
-                        Button("Refresh") {
-                            sessionViewModel.updateAllSessions()
-                        }
                         
                         Button(action: {
                             showClearConfirmation = true
@@ -220,6 +205,7 @@ struct SessionRowView: View {
 
 
 
+
 struct DetailedView: View {
     @Binding var session: SessionModel
     @ObservedObject var userSettingsModel: UserSettingsModel
@@ -227,6 +213,8 @@ struct DetailedView: View {
     @State private var isExporting = false
     @State private var csvDocument: CSVDocument = CSVDocument(text: "")
 
+    
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
@@ -235,15 +223,17 @@ struct DetailedView: View {
                     .fontWeight(.bold)
                     .padding(.top, 20)
                 
-                      PlotView(timepassed: session.duration,
-                         temperature: session.tempSetData,
-                         timeStride: userSettingsModel.interval)
-                    .frame(height: 300)
-                    .padding()
-                    .background(Color(.systemBackground))
-                    .cornerRadius(12)
-                    .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
-                    .padding(.horizontal)
+                PlotView(
+                    timepassed: session.duration,
+                    temperature: session.tempSetData,
+                    timeStride: userSettingsModel.interval
+                )
+                .frame(height: 300)
+                .padding()
+                .background(Color(.systemBackground))
+                .cornerRadius(12)
+                .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
+                .padding(.horizontal)
                 
                 HStack(spacing: 40) {
                     VStack {
@@ -298,7 +288,10 @@ struct DetailedView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Comments")
                         .font(.headline)
-                    PlaceholderTextEditor(text: $session.comment, placeholder: "Enter your comments here...")
+                    PlaceholderTextEditor(
+                        text: $session.comment,
+                        placeholder: "Enter your comments here..."
+                    )
                 }
                 .padding(.horizontal)
                 .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 2)
@@ -330,51 +323,67 @@ struct DetailedView: View {
             }
         }
     }
-    
+        
     // generate csv file
     func generateCSV() -> String {
         var csv = "Time (s),Temperature (F)\n"
         let interval = Double(userSettingsModel.interval)
         for (index, temp) in session.tempSetData.enumerated() {
-            // time starts from 5
             let time = interval * Double(index + 1)
             csv += "\(time),\(temp)\n"
         }
         return csv
     }
-
 }
-
-
-struct PlaceholderTextEditor: View {
-    @Binding var text: String
-    let placeholder: String
-
-    var body: some View {
-        TextEditor(text: $text)
-            .font(.system(.body, design: .rounded))  // rounded font
-            .padding(8)
-            .background(Color(UIColor.secondarySystemBackground))
-            .cornerRadius(10)
-            .overlay(
-                Group {
-                    if text.isEmpty {
-                        Text(placeholder)
-                            .foregroundColor(.gray)
-                            .padding(.top, 12)
-                            .padding(.leading, 16)
-                    }
-                },
-                alignment: .topLeading
-            )
-            .frame(height: 150)
+    
+    struct DetailedView_Previews: PreviewProvider {
+        @State static var session = SessionModel(
+            duration: 60,
+            temperatureChange: 2.5,
+            tempSetData: [94.0, 94.2, 94.5, 94.8],
+            inhaleTime: 4.5,
+            exhaleTime: 9.0,
+            regressionA: nil,
+            regressionB: nil,
+            regressionk: nil,
+            score: nil,
+            comment: ""
+        )
+        static var previews: some View {
+            DetailedView(session: $session, userSettingsModel: UserSettingsModel())
+        }
     }
-}
-
-
-#Preview {
-    SessionHistoryView(sessionViewModel: SessionViewModel(), userSettingsModel: UserSettingsModel())
-}
-
-
-
+    
+    
+    struct PlaceholderTextEditor: View {
+        @Binding var text: String
+        let placeholder: String
+        
+        var body: some View {
+            TextEditor(text: $text)
+                .font(.system(.body, design: .rounded))  // rounded font
+                .padding(8)
+                .background(Color(UIColor.secondarySystemBackground))
+                .cornerRadius(10)
+                .overlay(
+                    Group {
+                        if text.isEmpty {
+                            Text(placeholder)
+                                .foregroundColor(.gray)
+                                .padding(.top, 12)
+                                .padding(.leading, 16)
+                        }
+                    },
+                    alignment: .topLeading
+                )
+                .frame(height: 150)
+        }
+    }
+    
+    
+    #Preview {
+        SessionHistoryView(sessionViewModel: SessionViewModel(), userSettingsModel: UserSettingsModel())
+    }
+    
+    
+    

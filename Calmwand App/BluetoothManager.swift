@@ -47,7 +47,11 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     override init() {
         super.init()
         //initializing the centralManager
-        centralManager = CBCentralManager(delegate: self, queue: nil)
+        centralManager = CBCentralManager(
+            delegate: self,
+            queue: nil,
+            options: [CBCentralManagerOptionRestoreIdentifierKey: "com.Calmwand.bluetoothRestore"]
+        )
     }
 
     // MARK: - CBCentralManagerDelegate
@@ -64,7 +68,7 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         }
     }
 
-    // when a peripheral is discovered, this callback function will appear.
+    // MARK: - Scanning
     func centralManager(_ central: CBCentralManager,
                        didDiscover peripheral: CBPeripheral,
                        advertisementData: [String: Any],
@@ -76,6 +80,23 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
             }
         }
     }
+    
+    // MARK: — State Restoration
+      func centralManager(
+        _ central: CBCentralManager,
+        willRestoreState dict: [String: Any]
+      ) {
+        // iOS is handing back peripherals you were connected to
+        if let restoredPeripherals = dict[
+           CBCentralManagerRestoredStatePeripheralsKey
+        ] as? [CBPeripheral] {
+          restoredPeripherals.forEach { p in
+            p.delegate = self
+            // If you were already connected, rediscover services
+            p.discoverServices([serviceUUID])
+          }
+        }
+      }
 
     // when the user selects a device, this function will be called
     func connect(peripheral: CBPeripheral) {
@@ -139,32 +160,42 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     func peripheral(_ peripheral: CBPeripheral,
                     didDiscoverCharacteristicsFor service: CBService,
                     error: Error?) {
-        if let characteristics = service.characteristics {
-            for characteristic in characteristics {
-                // for all characteristics set notify
-                peripheral.setNotifyValue(true, for: characteristic)
-                
-                // actively read value for brightness, inhale and exhale time, motorStrength
-                if characteristic.uuid == brightnessCharacteristicUUID {
-                    self.brightnessCharacteristic = characteristic
-                    peripheral.readValue(for: characteristic)
-                }
+        guard let characteristics = service.characteristics else { return }
 
-                else if characteristic.uuid == inbreathtimeCharacteristicUUID {
-                    self.inbreathtimeCharacteristic = characteristic
-                    peripheral.readValue(for: characteristic)
-                }
-                else if characteristic.uuid == outbreathtimeCharacteristicUUID {
-                    self.outbreathtimeCharacteristic = characteristic
-                    peripheral.readValue(for: characteristic)
-                }
-                else if characteristic.uuid == motorStrengthCharacteristicUUID {
-                    self.motorStrengthCharacteristic = characteristic
-                    peripheral.readValue(for: characteristic)
-                }
+        for characteristic in characteristics {
+            switch characteristic.uuid {
+            
+            // — Temperature: subscribe to notifications —
+            case temperatureCharacteristicUUID:
+                self.temperatureCharacteristic = characteristic
+                peripheral.setNotifyValue(true, for: characteristic)
+            
+            // — Brightness: just read once —
+            case brightnessCharacteristicUUID:
+                self.brightnessCharacteristic = characteristic
+                peripheral.readValue(for: characteristic)
+            
+            // — Inhale time: just read once —
+            case inbreathtimeCharacteristicUUID:
+                self.inbreathtimeCharacteristic = characteristic
+                peripheral.readValue(for: characteristic)
+            
+            // — Exhale time: just read once —
+            case outbreathtimeCharacteristicUUID:
+                self.outbreathtimeCharacteristic = characteristic
+                peripheral.readValue(for: characteristic)
+            
+            // — Motor strength: just read once —
+            case motorStrengthCharacteristicUUID:
+                self.motorStrengthCharacteristic = characteristic
+                peripheral.readValue(for: characteristic)
+            
+            default:
+                break
             }
         }
     }
+
 
     
     // if the received value changed, this functin will be called

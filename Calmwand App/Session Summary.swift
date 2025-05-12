@@ -1,12 +1,13 @@
 import SwiftUI
 import UIKit
+import AudioToolbox
 
 struct SessionSummary: View {
     
     @ObservedObject var bluetoothManager: BluetoothManager
     @ObservedObject var sessionViewModel: SessionViewModel
     @StateObject var currentSessionModel = CurrentSessionModel()
-    @ObservedObject var userSettingsModel: UserSettingsModel
+    @ObservedObject var userSettingsModel = UserSettingsModel.shared
     
     @State var popBthconnect: Bool = false
     @State private var isSessionActive = false
@@ -18,6 +19,8 @@ struct SessionSummary: View {
     @State private var sessionCompleted: Bool = false
     @State private var lastScore: Double? = nil
     
+    @State private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
+    
     
     // connect -> connected button
     var connectionLabel: String {
@@ -27,6 +30,19 @@ struct SessionSummary: View {
         }
 
     func startSession() {
+        
+        backgroundTask = UIApplication.shared.beginBackgroundTask(withName: "CalmwandSession") {
+            // Called if time is about to expire — clean up
+            UIApplication.shared.endBackgroundTask(self.backgroundTask)
+            self.backgroundTask = .invalid
+          }
+        
+        AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
+        
+        let impact = UIImpactFeedbackGenerator(style: .soft)
+        impact.prepare()          // prep is optional but removes latency
+        impact.impactOccurred()
+        
         isSessionActive = true
         sessionCompleted = false
         lastScore = nil
@@ -48,12 +64,21 @@ struct SessionSummary: View {
     }
     
     func endSession() {
+        
+        AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
+
         isSessionActive = false
         timer?.invalidate()
         timer = nil
         
         let generator = UIImpactFeedbackGenerator(style: .rigid)
-                generator.impactOccurred()
+        generator.prepare()
+        generator.impactOccurred()
+        
+        if backgroundTask != .invalid {
+            UIApplication.shared.endBackgroundTask(backgroundTask)
+            backgroundTask = .invalid
+          }
     }
     
     func formattedTime() -> String {
@@ -380,4 +405,3 @@ struct ListTempView: View {
                    sessionViewModel: SessionViewModel(),
                    userSettingsModel: UserSettingsModel())
 }
-
