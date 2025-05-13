@@ -1,3 +1,11 @@
+//
+//  AppDelegate.swift
+//  Calmwand App
+//
+//  Created by hansma lab on 5/13/25.
+//
+
+
 // AppDelegate.swift
 import UIKit
 
@@ -6,6 +14,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     _ application: UIApplication,
     supportedInterfaceOrientationsFor window: UIWindow?
   ) -> UIInterfaceOrientationMask {
-    return OrientationLock.mask
+    OrientationLock.mask
   }
 }

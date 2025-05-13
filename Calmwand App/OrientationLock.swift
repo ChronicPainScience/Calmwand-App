@@ -1,8 +1,14 @@
+//
+//  OrientationLock.swift
+//  Calmwand App
+//
+//  Created by hansma lab on 5/13/25.
+//
+
+
 // OrientationLock.swift
 import UIKit
 
-/// A global, mutable place to store which orientations are allowed.
 struct OrientationLock {
-    /// Default: portrait only
     static var mask: UIInterfaceOrientationMask = .portrait
 }

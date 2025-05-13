@@ -27,6 +27,16 @@ struct SettingView: View {
         NavigationView {
             List {
                 Section {
+                    NavigationLink(destination: InfoView()) {
+                                            HStack(spacing: 12) {
+                                                Image(systemName: "info.circle")
+                                                    .font(.system(size: 24))
+                                                    .foregroundColor(.blue)
+                                                Text("How to Use & About")
+                                                    .font(.headline)
+                                            }
+                                            .padding(.vertical, 8)
+                                        }
                    /* NavigationLink(destination: AccountView()) {
                         HStack(spacing: 12) {
                             Image(systemName: "person.crop.circle")
@@ -169,6 +179,10 @@ struct SettingView: View {
                 }
             )
         }
+        .onAppear {
+                    OrientationLock.mask = .portrait
+                    requestOrientationUpdate(.portrait)
+                }
     }
 }
 

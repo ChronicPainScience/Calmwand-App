@@ -61,6 +61,7 @@ struct SessionSummary: View {
                 currentSessionModel.temperatureSet.append(currentTemperature)
             }
         }
+        
     }
     
     func endSession() {
@@ -203,7 +204,12 @@ struct SessionSummary: View {
             }
             .applyBackgroundGradient()
         }
+        .onAppear {
+                    OrientationLock.mask = .portrait
+                    requestOrientationUpdate(.portrait)
+                }
     }
+    
 }
 
 

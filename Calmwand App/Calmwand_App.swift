@@ -10,6 +10,9 @@ import SwiftData
 
 @main
 struct Calmwand_App: App {
+    
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     init() {
             // Disable the idle timer so the screen doesn't auto-lock
             UIApplication.shared.isIdleTimerDisabled = true

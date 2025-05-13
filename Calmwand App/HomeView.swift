@@ -27,11 +27,16 @@ struct HomeView: View {
                 .tabItem {
                     Label("Settings", systemImage: "person.crop.circle")
                 }
+            HowToUseView()
+                            .tabItem {
+                                Label("Guide", systemImage: "book.fill")
+                            }
+                            .toolbarBackground(.hidden, for: .tabBar)
             // NEW: Info tab directly accessible from HomeView
-            InfoView()
-                .tabItem {
-                    Label("Info", systemImage: "info.circle")
-                }
+            //InfoView()
+                //.tabItem {
+                   // Label("Info", systemImage: "info.circle")
+                //}
         }
         .applyBackgroundGradient()
         .onAppear {

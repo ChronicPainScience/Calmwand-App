@@ -7,11 +7,23 @@
 
 
 import SwiftUI
+import PDFKit
 
 struct InfoView: View {
     var body: some View {
         NavigationView {
             List {
+                // ─── How to Use link ────────────────────────
+                Section {
+                    NavigationLink(destination: HowToUseView()) {
+                        HStack {
+                            Image(systemName: "book.fill")
+                                .foregroundColor(.blue)
+                            Text("How to Use")
+                                .font(.headline)
+                        }
+                    }
+                }
                 Section(header: Text("Contact")) {
                     Text("For any issues or inquiries, please contact:")
                         .font(.subheadline)
@@ -42,7 +54,12 @@ struct InfoView: View {
             .listStyle(GroupedListStyle())
             .navigationTitle("Info")
         }
+        .onAppear {
+                    OrientationLock.mask = .portrait
+                    requestOrientationUpdate(.portrait)
+        }
     }
+    
 }
 
 struct InfoView_Previews: PreviewProvider {

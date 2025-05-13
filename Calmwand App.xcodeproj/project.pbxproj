@@ -25,6 +25,10 @@
 		390C07792DD29D4F00802648 /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390C07782DD29D4F00802648 /* DocumentPicker.swift */; };
 		3980B83F2D6D0CCC003286AE /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3980B83E2D6D0CCC003286AE /* DisclaimerView.swift */; };
 		3983FDFF2D6D25CD0096A9AA /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3983FDFE2D6D25CD0096A9AA /* InfoView.swift */; };
+		398C19582DD3C88F00AF22C2 /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398C19572DD3C88F00AF22C2 /* HowToUseView.swift */; };
+		398C195C2DD3CB3600AF22C2 /* OrientationLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398C195B2DD3CB3600AF22C2 /* OrientationLock.swift */; };
+		398C195E2DD3CB4900AF22C2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398C195D2DD3CB4900AF22C2 /* AppDelegate.swift */; };
+		398C19622DD3CED000AF22C2 /* OrientationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398C19612DD3CECD00AF22C2 /* OrientationHelper.swift */; };
 		39A44BAE2DC92CB5001C4875 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A44BAD2DC92CB5001C4875 /* SplashScreenView.swift */; };
 		39A8B3E72D77A92300C50DD6 /* TenMinuteTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A8B3E62D77A92300C50DD6 /* TenMinuteTimerView.swift */; };
 /* End PBXBuildFile section */
@@ -51,6 +55,10 @@
 		3980B83E2D6D0CCC003286AE /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
 		3983FDFE2D6D25CD0096A9AA /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		398BA0F62DB0253800D83AF4 /* Calmwand-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Calmwand-App-Info.plist"; sourceTree = SOURCE_ROOT; };
+		398C19572DD3C88F00AF22C2 /* HowToUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseView.swift; sourceTree = "<group>"; };
+		398C195B2DD3CB3600AF22C2 /* OrientationLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationLock.swift; sourceTree = "<group>"; };
+		398C195D2DD3CB4900AF22C2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		398C19612DD3CECD00AF22C2 /* OrientationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationHelper.swift; sourceTree = "<group>"; };
 		3995179E2DD26EDF003FBE61 /* SessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionModel.swift; sourceTree = "<group>"; };
 		39A44BAD2DC92CB5001C4875 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		39A8B3E62D77A92300C50DD6 /* TenMinuteTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TenMinuteTimerView.swift; sourceTree = "<group>"; };
@@ -90,6 +98,10 @@
 		11D9BFC12C87C05900173479 /* Calmwand App */ = {
 			isa = PBXGroup;
 			children = (
+				398C19612DD3CECD00AF22C2 /* OrientationHelper.swift */,
+				398C195D2DD3CB4900AF22C2 /* AppDelegate.swift */,
+				398C195B2DD3CB3600AF22C2 /* OrientationLock.swift */,
+				398C19572DD3C88F00AF22C2 /* HowToUseView.swift */,
 				390C077A2DD29DFD00802648 /* Calmwand App.entitlements */,
 				390C07782DD29D4F00802648 /* DocumentPicker.swift */,
 				390C07742DD29A6100802648 /* ActivityView.swift */,
@@ -203,6 +215,8 @@
 				11D9C0362C9114AC00173479 /* Session Summary.swift in Sources */,
 				113DB9EB2CDAD4A800BC179B /* Classes.swift in Sources */,
 				39A8B3E72D77A92300C50DD6 /* TenMinuteTimerView.swift in Sources */,
+				398C19582DD3C88F00AF22C2 /* HowToUseView.swift in Sources */,
+				398C195C2DD3CB3600AF22C2 /* OrientationLock.swift in Sources */,
 				390C07792DD29D4F00802648 /* DocumentPicker.swift in Sources */,
 				114167772CB7002A0048C396 /* BluetoothConnection.swift in Sources */,
 				11D9C0342C91134B00173479 /* Setting.swift in Sources */,
@@ -215,6 +229,8 @@
 				11D9BFC72C87C05900173479 /* Item.swift in Sources */,
 				3980B83F2D6D0CCC003286AE /* DisclaimerView.swift in Sources */,
 				113DB9EF2CDC10ED00BC179B /* Plot.swift in Sources */,
+				398C19622DD3CED000AF22C2 /* OrientationHelper.swift in Sources */,
+				398C195E2DD3CB4900AF22C2 /* AppDelegate.swift in Sources */,
 				1177C4B12D532A7C002654F4 /* ViewModifier.swift in Sources */,
 				11D9BFC32C87C05900173479 /* Calmwand_App.swift in Sources */,
 			);

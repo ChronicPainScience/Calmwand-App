@@ -1,24 +1,25 @@
-// SplashScreenView.swift
 import SwiftUI
 
 struct SplashScreenView: View {
-    @State private var progress = 0.0          // 0 → 1
-    
+    @State private var isSpinning = false
+
     var body: some View {
         ZStack {
             Color.white.ignoresSafeArea()
-            
-            ProgressView(value: progress)
-                .progressViewStyle(.linear)                    // slim bar
-                .tint(.blue)                                   // optional colour
-                .frame(width: 220)
-                .environment(\.layoutDirection, .leftToRight)  // ← key line
+
+            Image("Image")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 160, height: 160)                // adjust size
+                .rotationEffect(.degrees(isSpinning ? 360 : 0))
+                .animation(
+                    .linear(duration: 1)                       // one full spin per second
+                    .repeatForever(autoreverses: false),
+                    value: isSpinning
+                )
         }
         .onAppear {
-            withAnimation(.linear(duration: 1.0)) {
-                progress = 1.0                                 // fills in ~1 s
-            }
+            isSpinning = true
         }
     }
 }
-
