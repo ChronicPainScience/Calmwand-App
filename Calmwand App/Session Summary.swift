@@ -185,6 +185,15 @@ struct SessionSummary: View {
                     .padding(.horizontal)
                 }
                 
+                if isSessionActive {
+                    MiniGraphView(data: currentSessionModel.temperatureSet)
+                        .frame(
+                            width: UIScreen.main.bounds.width / 3,
+                            height: 75
+                        )
+                        .transition(.opacity)
+                }
+                
                 // developer purposes
                 // NavigationLink {
                    // SessionRecordView(currentSessionModel: currentSessionModel,

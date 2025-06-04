@@ -57,6 +57,10 @@ struct SessionHistoryView: View {
             }
             .applyBackgroundGradient()
         }
+        .onAppear {
+                    OrientationLock.mask = .portrait
+                    requestOrientationUpdate(.portrait)
+                }
     }
 }
 

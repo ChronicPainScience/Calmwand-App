@@ -1,4 +1,12 @@
-import SwiftUIAdd commentMore actions
+//
+//  MiniGraphView.swift
+//  Calmwand App
+//
+//  Created by hansma lab on 6/4/25.
+//
+
+
+import SwiftUI
 
 /// Draws a simple polyline with X/Y axes, no grid or markers.
 struct MiniGraphView: View {
@@ -29,7 +37,7 @@ struct MiniGraphView: View {
                         let x = geo.size.width * CGFloat(idx) / CGFloat(data.count - 1)
                         let yNorm = (data[idx] - minY) / range
                         let y = geo.size.height * (1 - CGFloat(yNorm))
-                        if idx == 0 {Add commentMore actions
+                        if idx == 0 {
                             p.move(to: CGPoint(x: x, y: y))
                         } else {
                             p.addLine(to: CGPoint(x: x, y: y))
