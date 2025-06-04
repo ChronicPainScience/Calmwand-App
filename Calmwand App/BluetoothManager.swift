@@ -34,6 +34,12 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     let inbreathtimeCharacteristicUUID = CBUUID(string: "87f23fe2-4b42-11ed-bdc3-0242ac12000C")
     let outbreathtimeCharacteristicUUID = CBUUID(string: "87f23fe2-4b42-11ed-bdc3-0242ac12000D")
     let motorStrengthCharacteristicUUID = CBUUID(string: "87f23fe2-4b42-11ed-bdc3-0242ac12000E")
+    
+    let fileListRequestCharacteristicUUID = CBUUID(string: "87f23fe2-4b42-11ed-bdc3-0242ac12000F")
+    let fileNameCharacteristicUUID        = CBUUID(string: "87f23fe2-4b42-11ed-bdc3-0242ac120010")
+    
+    let fileContentRequestCharacteristicUUID = CBUUID(string: "87f23fe2-4b42-11ed-bdc3-0242ac120011")
+    let fileContentCharacteristicUUID        = CBUUID(string: "87f23fe2-4b42-11ed-bdc3-0242ac120012")
 
 
 
@@ -42,6 +48,20 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     private var inbreathtimeCharacteristic: CBCharacteristic?
     private var outbreathtimeCharacteristic: CBCharacteristic?
     private var motorStrengthCharacteristic: CBCharacteristic?
+    // ── NEW: hold references to the two new characteristics:
+    private var fileListRequestCharacteristic: CBCharacteristic?
+    private var fileNameCharacteristic:        CBCharacteristic?
+    private var fileContentRequestCharacteristic: CBCharacteristic?
+    private var fileContentCharacteristic:        CBCharacteristic?
+
+    // ── NEW: accumulate each incoming line of the file ──
+    @Published var arduinoFileContentLines: [String] = []
+
+    // ── NEW: set to true when we receive "EOF" ──
+    @Published var fileContentTransferCompleted: Bool = false
+    
+    @Published var arduinoFileList: [String] = []
+
 
 
     override init() {
@@ -150,7 +170,11 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
                                                     brightnessCharacteristicUUID,
                                                     inbreathtimeCharacteristicUUID,
                                                     outbreathtimeCharacteristicUUID,
-                                                    motorStrengthCharacteristicUUID],
+                                                    motorStrengthCharacteristicUUID,
+                                                    fileListRequestCharacteristicUUID,
+                                                    fileNameCharacteristicUUID,
+                                                    fileContentRequestCharacteristicUUID,
+                                                    fileContentCharacteristicUUID],
                                                    for: service)
             }
         }
@@ -189,6 +213,26 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
             case motorStrengthCharacteristicUUID:
                 self.motorStrengthCharacteristic = characteristic
                 peripheral.readValue(for: characteristic)
+                
+            // ── NEW: file‐list request characteristic (WRITE only) ──
+            case fileListRequestCharacteristicUUID:
+                self.fileListRequestCharacteristic = characteristic
+
+            // ── NEW: filename characteristic (READ | NOTIFY) ──
+            case fileNameCharacteristicUUID:
+                self.fileNameCharacteristic = characteristic
+                peripheral.setNotifyValue(true, for: characteristic)
+                
+            // ── NEW: “fileContentRequestChar” (WRITE-only) ──
+            case fileContentRequestCharacteristicUUID:
+                self.fileContentRequestCharacteristic = characteristic
+                print("Found fileContentRequestCharacteristic (WRITE)")
+
+            // ── NEW: “fileContentChar” (READ|NOTIFY) ──
+            case fileContentCharacteristicUUID:
+                self.fileContentCharacteristic = characteristic
+                peripheral.setNotifyValue(true, for: characteristic)
+                print("Found fileContentCharacteristic (NOTIFY). Subscribing…")
             
             default:
                 break
@@ -196,54 +240,103 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         }
     }
 
+    /// Ask Arduino to send back the contents of exactly “fileName”
+    /// (the Arduino expects “GETFILE:<fileName>”).
+    func requestArduinoFile(fileName: String) {
+        guard let peripheral = connectedPeripheral,
+              let reqChar   = fileContentRequestCharacteristic else {
+            print("Cannot request file: no characteristic or peripheral.")
+            return
+        }
 
+        // Clear any old lines, and reset the “completed” flag
+        DispatchQueue.main.async {
+            self.arduinoFileContentLines.removeAll()
+            self.fileContentTransferCompleted = false
+        }
+
+        let cmd = "GETFILE:\(fileName)"
+        guard let dataToSend = cmd.data(using: .utf8) else {
+            print("Could not convert ‘\(cmd)’ to Data.")
+            return
+        }
+        print("Writing ‘\(cmd)’ to Arduino…")
+        peripheral.writeValue(dataToSend, for: reqChar, type: .withResponse)
+    }
     
     // if the received value changed, this functin will be called
-    func peripheral(_ peripheral: CBPeripheral,
-                      didUpdateValueFor characteristic: CBCharacteristic,
-                      error: Error?) {
-          // if the characteristic is from temperatureCharacteristicUUID
-          if characteristic.uuid == temperatureCharacteristicUUID {
-              if let tempdata = characteristic.value,
-                 let tempString = String(data: tempdata, encoding: .utf8) {
-                  DispatchQueue.main.async {
-                      self.temperatureData = tempString
-                  }
-              }
-          }
-          // if the characteristic is from brightnessCharacteristicUUID
-          else if characteristic.uuid == brightnessCharacteristicUUID {
-              if let brightnessdata = characteristic.value,
-                 let brightString = String(data: brightnessdata, encoding: .utf8) {
-                  DispatchQueue.main.async {
-                      self.brightnessData = brightString
-                  }
-              }
-          }
-          else if characteristic.uuid == inbreathtimeCharacteristicUUID {
-              if let inhaledata = characteristic.value,
-                 let inhaleString = String(data: inhaledata, encoding: .utf8) {
-                  DispatchQueue.main.async {
-                      self.inhaleData = inhaleString
-                  }
-              }
-          }
-          else if characteristic.uuid == outbreathtimeCharacteristicUUID {
-              if let exhaledata = characteristic.value,
-                 let exhaleString = String(data: exhaledata, encoding: .utf8) {
-                  DispatchQueue.main.async {
-                      self.exhaleData = exhaleString
-                  }
-              }
-          }
-          else if characteristic.uuid == motorStrengthCharacteristicUUID {
-              if let motorData = characteristic.value,
-                 let motorString = String(data: motorData, encoding: .utf8) {
-                  DispatchQueue.main.async {
-                      self.motorStrengthData = motorString
-                  }
-              }
-          }
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        guard error == nil else { return }
+
+        if characteristic.uuid == temperatureCharacteristicUUID {
+            if let tempData = characteristic.value,
+               let tempString = String(data: tempData, encoding: .utf8) {
+                DispatchQueue.main.async {
+                    self.temperatureData = tempString
+                }
+            }
+        }
+        else if characteristic.uuid == brightnessCharacteristicUUID {
+            if let brightData = characteristic.value,
+               let brightString = String(data: brightData, encoding: .utf8) {
+                DispatchQueue.main.async {
+                    self.brightnessData = brightString
+                }
+            }
+        }
+        else if characteristic.uuid == inbreathtimeCharacteristicUUID {
+            if let inhData = characteristic.value,
+               let inhString = String(data: inhData, encoding: .utf8) {
+                DispatchQueue.main.async {
+                    self.inhaleData = inhString
+                }
+            }
+        }
+        else if characteristic.uuid == outbreathtimeCharacteristicUUID {
+            if let exhData = characteristic.value,
+               let exhString = String(data: exhData, encoding: .utf8) {
+                DispatchQueue.main.async {
+                    self.exhaleData = exhString
+                }
+            }
+        }
+        else if characteristic.uuid == motorStrengthCharacteristicUUID {
+            if let motData = characteristic.value,
+               let motString = String(data: motData, encoding: .utf8) {
+                DispatchQueue.main.async {
+                    self.motorStrengthData = motString
+                }
+            }
+        }
+        // ── NEW: “filename” notifications from Arduino ──
+        else if characteristic.uuid == fileNameCharacteristicUUID {
+            guard let data = characteristic.value,
+                  let filename = String(data: data, encoding: .utf8)
+            else { return }
+
+            DispatchQueue.main.async {
+                if filename != "END" {
+                    self.arduinoFileList.append(filename)
+                } else {
+                    // “END” means the Arduino is done sending all filenames
+                    // (no action needed here unless you want to track completion)
+                }
+            }
+        }
+        else if characteristic.uuid == fileContentCharacteristicUUID {
+                guard let data = characteristic.value,
+                      let line = String(data: data, encoding: .utf8) else { return }
+
+                DispatchQueue.main.async {
+                    if line != "EOF" {
+                        print("Received file line: \(line)")
+                        self.arduinoFileContentLines.append(line)
+                    } else {
+                        print("Received EOF.")
+                        self.fileContentTransferCompleted = true
+                    }
+                }
+            }
     }
 
     // MARK: - sending values to arduino
@@ -302,6 +395,24 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         let dataToSend = Data(strength.utf8)
         peripheral.writeValue(dataToSend, for: characteristic, type: .withResponse)
         print("Sent motor strength = \(strength)")
+    }
+    
+    func requestArduinoFileList() {
+        guard let peripheral = connectedPeripheral,
+              let reqChar   = fileListRequestCharacteristic else {
+            print("Cannot request file list: no request characteristic or no peripheral.")
+            return
+        }
+
+        // Clear any previous list before requesting:
+        DispatchQueue.main.async {
+            self.arduinoFileList.removeAll()
+        }
+
+        let cmd = "GETLIST"
+        if let dataToSend = cmd.data(using: .utf8) {
+            peripheral.writeValue(dataToSend, for: reqChar, type: .withResponse)
+        }
     }
 
 }

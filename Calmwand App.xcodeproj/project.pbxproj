@@ -30,6 +30,7 @@
 		398C195E2DD3CB4900AF22C2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398C195D2DD3CB4900AF22C2 /* AppDelegate.swift */; };
 		398C19622DD3CED000AF22C2 /* OrientationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398C19612DD3CECD00AF22C2 /* OrientationHelper.swift */; };
 		399727082DF0CA2900CB88C7 /* MiniGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399727072DF0CA2900CB88C7 /* MiniGraphView.swift */; };
+		3997270A2DF0CFD800CB88C7 /* ArduinoFileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399727092DF0CFD800CB88C7 /* ArduinoFileListView.swift */; };
 		39A44BAE2DC92CB5001C4875 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A44BAD2DC92CB5001C4875 /* SplashScreenView.swift */; };
 		39A8B3E72D77A92300C50DD6 /* TenMinuteTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A8B3E62D77A92300C50DD6 /* TenMinuteTimerView.swift */; };
 /* End PBXBuildFile section */
@@ -62,6 +63,7 @@
 		398C19612DD3CECD00AF22C2 /* OrientationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationHelper.swift; sourceTree = "<group>"; };
 		3995179E2DD26EDF003FBE61 /* SessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionModel.swift; sourceTree = "<group>"; };
 		399727072DF0CA2900CB88C7 /* MiniGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniGraphView.swift; sourceTree = "<group>"; };
+		399727092DF0CFD800CB88C7 /* ArduinoFileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArduinoFileListView.swift; sourceTree = "<group>"; };
 		39A44BAD2DC92CB5001C4875 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		39A8B3E62D77A92300C50DD6 /* TenMinuteTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TenMinuteTimerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +102,7 @@
 		11D9BFC12C87C05900173479 /* Calmwand App */ = {
 			isa = PBXGroup;
 			children = (
+				399727092DF0CFD800CB88C7 /* ArduinoFileListView.swift */,
 				399727072DF0CA2900CB88C7 /* MiniGraphView.swift */,
 				398C19612DD3CECD00AF22C2 /* OrientationHelper.swift */,
 				398C195D2DD3CB4900AF22C2 /* AppDelegate.swift */,
@@ -235,6 +238,7 @@
 				113DB9EF2CDC10ED00BC179B /* Plot.swift in Sources */,
 				398C19622DD3CED000AF22C2 /* OrientationHelper.swift in Sources */,
 				398C195E2DD3CB4900AF22C2 /* AppDelegate.swift in Sources */,
+				3997270A2DF0CFD800CB88C7 /* ArduinoFileListView.swift in Sources */,
 				1177C4B12D532A7C002654F4 /* ViewModifier.swift in Sources */,
 				11D9BFC32C87C05900173479 /* Calmwand_App.swift in Sources */,
 			);

@@ -18,10 +18,14 @@ struct HomeView: View {
                     Label("Session Summary", systemImage: "trophy.fill")
                 }
             
-            SessionHistoryView(sessionViewModel: sessionViewModel, userSettingsModel: userSettingsModel)
-                .tabItem {
-                    Label("Session History", systemImage: "chart.line.uptrend.xyaxis")
-                }
+            SessionHistoryView(
+                            sessionViewModel: sessionViewModel,
+                            userSettingsModel: userSettingsModel,
+                            bluetoothManager: bluetoothManager  // ← pass it here
+                        )
+                        .tabItem {
+                            Label("Session History", systemImage: "chart.line.uptrend.xyaxis")
+                        }
             
             SettingView(userSettingsModel: userSettingsModel, bluetoothManager: bluetoothManager)
                 .tabItem {
@@ -42,6 +46,7 @@ struct HomeView: View {
         .onAppear {
             // Disable idle timer when the view appears
             UIApplication.shared.isIdleTimerDisabled = true
+            print("HomeView appeared!")
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                     // Reapply the idle timer disable setting when the app becomes active

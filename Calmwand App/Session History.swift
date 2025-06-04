@@ -6,14 +6,28 @@ struct SessionHistoryView: View {
     @StateObject var sessionViewModel: SessionViewModel
     @ObservedObject var userSettingsModel: UserSettingsModel
     
+    // ── NEW: controls whether we show the Arduino‐filename sheet
+    @State private var showingArduinoSheet = false
+
     // initialize weekly goal from UserDefaults
     @State private var goal: Int = UserDefaults.standard.integer(forKey: "goal")
     @State private var showClearConfirmation = false
+    
+    @ObservedObject var bluetoothManager: BluetoothManager
     
     var body: some View {
         NavigationView {
             VStack{
                 WeeklyGoalCard(goal: $goal, sessionCount: sessionViewModel.sessionArray.count)
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        showingArduinoSheet = true
+                    }) {
+                        Label("Show Arduino Sessions", systemImage: "arrow.2.circlepath.circle")
+                    }
+                    .padding(.trailing, 20)
+                }
                 List {
                     // Recent Sessions section
                     Section(header:
@@ -56,6 +70,14 @@ struct SessionHistoryView: View {
                 }
             }
             .applyBackgroundGradient()
+            
+            .sheet(isPresented: $showingArduinoSheet) {
+                ArduinoFileListView(
+                    isPresented: $showingArduinoSheet,
+                    sessionViewModel: sessionViewModel    // pass the model too
+                )
+                .environmentObject(bluetoothManager)
+            }
         }
         .onAppear {
                     OrientationLock.mask = .portrait
@@ -385,9 +407,12 @@ struct DetailedView: View {
     }
     
     
-    #Preview {
-        SessionHistoryView(sessionViewModel: SessionViewModel(), userSettingsModel: UserSettingsModel())
-    }
-    
+#Preview {
+    SessionHistoryView(
+        sessionViewModel: SessionViewModel(),
+        userSettingsModel: UserSettingsModel(),
+        bluetoothManager: BluetoothManager()
+    )
+}
     
     
