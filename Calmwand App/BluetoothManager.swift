@@ -414,6 +414,32 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
             peripheral.writeValue(dataToSend, for: reqChar, type: .withResponse)
         }
     }
+    
+    func cancelFileImport() {
+        guard let peripheral = connectedPeripheral,
+              let reqChar   = fileContentRequestCharacteristic,
+              let contentChar = fileContentCharacteristic
+        else {
+            print("Cannot cancel file import: missing characteristic or peripheral.")
+            return
+        }
+
+        // Tell Arduino to cancel
+        let cmd = "CANCEL"
+        if let data = cmd.data(using: .utf8) {
+            print("Writing ‘CANCEL’ to Arduino…")
+            peripheral.writeValue(data, for: reqChar, type: .withResponse)
+        }
+
+        print("Unsubscribing from file‐content notifications")
+        //peripheral.setNotifyValue(false, for: contentChar)
+
+        // 3) Clear any buffered lines
+        DispatchQueue.main.async {
+            self.arduinoFileContentLines.removeAll()
+            self.fileContentTransferCompleted = false
+        }
+    }
 
 }
 

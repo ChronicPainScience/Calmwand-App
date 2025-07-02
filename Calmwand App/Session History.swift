@@ -27,6 +27,8 @@ struct SessionHistoryView: View {
                         Label("Show Arduino Sessions", systemImage: "arrow.2.circlepath.circle")
                     }
                     .padding(.trailing, 20)
+                    .opacity(bluetoothManager.isConnected ? 1 : 0.25)    // hides it
+                    .disabled(!bluetoothManager.isConnected)           // and prevents taps
                 }
                 List {
                     // Recent Sessions section
