@@ -6,48 +6,57 @@ struct ArduinoFileListView: View {
     @ObservedObject var sessionViewModel: SessionViewModel
 
     @State private var isImporting = false
+    @State private var totalSeconds: Int = 0    // total expected seconds of session
 
     var body: some View {
         NavigationView {
             VStack {
                 if bluetoothManager.arduinoFileList.isEmpty {
-                    Text("Fetching sessions from Arduino…")
+                    Text("Fetching sessions…")
                         .foregroundColor(.secondary)
                         .padding()
                 }
 
                 List {
-                  ForEach(
-                    bluetoothManager.arduinoFileList
-                      .filter { $0.lowercased().hasPrefix("data") },
-                    id: \.self
-                  ) { entry in
-                    // entry == "data1.txt:10"
-                    let parts = entry.split(separator: ":")
-                    let name = String(parts[0])
-                    let mins = parts.count > 1 ? Int(parts[1]) ?? 0 : 0
+                    ForEach(
+                        bluetoothManager.arduinoFileList
+                            .filter { $0.lowercased().hasPrefix("data") },
+                        id: \.self
+                    ) { entry in
+                        let parts = entry.split(separator: ":")
+                        let name = String(parts[0])
+                        let mins = parts.count > 1 ? Int(parts[1]) ?? 0 : 0
 
-                    Button(action: {
-                      guard !isImporting else { return }
-                      isImporting = true
-                      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        bluetoothManager.requestArduinoFile(fileName: name)
-                      }
-                    }) {
-                      HStack {
-                        Text(name)
-                        Spacer()
-                        Text("(\(mins) min)")
-                          .foregroundColor(.secondary)
-                      }
-                      .contentShape(Rectangle()) // makes whole row tappable
+                        Button {
+                            guard !isImporting else { return }
+                            isImporting = true
+                            totalSeconds = mins * 60
+                            bluetoothManager.arduinoFileContentLines.removeAll()
+                            bluetoothManager.fileContentTransferCompleted = false
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                bluetoothManager.requestArduinoFile(fileName: name)
+                            }
+                        } label: {
+                            HStack {
+                                Text(name)
+                                Spacer()
+                                Text("(\(mins) min)")
+                                    .foregroundColor(.secondary)
+                            }
+                            .contentShape(Rectangle())
+                        }
                     }
-                  }
                 }
 
                 if isImporting {
-                    Text("Importing… \(bluetoothManager.arduinoFileContentLines.count) lines received")
+                    // real‐time progress bar
+                    let linesSoFar = bluetoothManager.arduinoFileContentLines.count
+                    ProgressView("Importing…", value: Double(linesSoFar), total: Double(totalSeconds))
                         .padding()
+                    // optional text indicator
+                    Text("\(min(linesSoFar / 60, totalSeconds/60)) of \(totalSeconds/60) min")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             }
             .navigationTitle("Arduino SD Sessions")
@@ -60,15 +69,15 @@ struct ArduinoFileListView: View {
                     }
                 }
             }
-            .onReceive(bluetoothManager.$fileContentTransferCompleted) { finished in
-                if finished && isImporting {
+            .onReceive(bluetoothManager.$fileContentTransferCompleted) { done in
+                if done && isImporting {
                     importSessionFromLines()
                     isPresented = false
+                    isImporting = false
                 }
             }
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    print("Requesting file list from Arduino…")
                     bluetoothManager.requestArduinoFileList()
                 }
             }
@@ -76,45 +85,47 @@ struct ArduinoFileListView: View {
     }
 
     func importSessionFromLines() {
-        let lines = bluetoothManager.arduinoFileContentLines
-        print("importSessionFromLines(): \(lines.count) total lines")
+        let rawLines = bluetoothManager.arduinoFileContentLines
+            print("🔍 importSessionFromLines(): got \(rawLines.count) total lines")
 
-        guard lines.count >= 2 else {
-            print("Not enough lines to form a session. Aborting.")
-            isImporting = false
-            return
-        }
+            var rawTimestamps: [Double] = []
+            var rawTemps:      [Double] = []
 
-        // 1) Parse & down‐sample 1/10
-        var rawTimestamps: [Double] = []
-        var rawTemps:      [Double] = []
+            for line in rawLines {
+                // 1) Trim *all* whitespace/newlines
+                let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        for line in bluetoothManager.arduinoFileContentLines {
-            // Trim out any leading/trailing whitespace or newlines
-            let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
-            
-            // Now split on one or more spaces
-            let parts = trimmed.split(whereSeparator: { $0.isWhitespace })
-            guard parts.count >= 2 else {
-                print("⚠️ Could not split line into two parts: '\(trimmed)'")
-                continue
+                // 2) Split on ANY whitespace and filter out empties
+                let parts = trimmed
+                    .components(separatedBy: .whitespacesAndNewlines)
+                    .filter { !$0.isEmpty }
+
+                // 3) Debug-print what we actually got
+                print("🔍 tokens = \(parts)")
+
+                // 4) Must have at least two tokens
+                guard parts.count >= 2 else {
+                    print("⚠️ Not enough tokens to parse: \(parts)")
+                    continue
+                }
+
+                // 5) Parse timestamp
+                guard let t = Double(parts[0]) else {
+                    print("⚠️ Could not parse timestamp: '\(parts[0])'")
+                    continue
+                }
+
+                // 6) Parse raw hundredths-of-°F
+                guard let rawHundredths = Double(parts[1]) else {
+                    print("⚠️ Could not parse temp value: '\(parts[1])'")
+                    continue
+                }
+
+                rawTimestamps.append(t)
+                rawTemps.append(rawHundredths / 100.0)
             }
-            
-            // Parse timestamp
-            guard let t = Double(parts[0]) else {
-                print("⚠️ Could not parse timestamp: '\(parts[0])'")
-                continue
-            }
-            
-            // Parse raw hundredths (also trimmed now)
-            guard let rawHundredths = Double(parts[1]) else {
-                print("⚠️ Could not parse temperature: '\(parts[1])'")
-                continue
-            }
-            
-            rawTimestamps.append(t)
-            rawTemps.append(rawHundredths / 100.0)  // convert to °F
-        }
+
+            print("⚙️ Successfully parsed \(rawTemps.count) points")
 
         print("⚙️ Parsed \(rawTemps.count) points (no down-sampling)")
         guard rawTimestamps.count >= 2 else {
