@@ -40,6 +40,8 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     
     let fileContentRequestCharacteristicUUID = CBUUID(string: "87f23fe2-4b42-11ed-bdc3-0242ac120011")
     let fileContentCharacteristicUUID        = CBUUID(string: "87f23fe2-4b42-11ed-bdc3-0242ac120012")
+    
+    let fileActionCharacteristicUUID = CBUUID(string: "87f23fe2-4b42-11ed-bdc3-0242ac120013")
 
 
 
@@ -53,6 +55,8 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     private var fileNameCharacteristic:        CBCharacteristic?
     private var fileContentRequestCharacteristic: CBCharacteristic?
     private var fileContentCharacteristic:        CBCharacteristic?
+    
+    private var fileActionCharacteristic: CBCharacteristic?
 
     // ── NEW: accumulate each incoming line of the file ──
     @Published var arduinoFileContentLines: [String] = []
@@ -174,7 +178,8 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
                                                     fileListRequestCharacteristicUUID,
                                                     fileNameCharacteristicUUID,
                                                     fileContentRequestCharacteristicUUID,
-                                                    fileContentCharacteristicUUID],
+                                                    fileContentCharacteristicUUID,
+                                                    fileActionCharacteristicUUID],
                                                    for: service)
             }
         }
@@ -233,6 +238,9 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
                 self.fileContentCharacteristic = characteristic
                 peripheral.setNotifyValue(true, for: characteristic)
                 print("Found fileContentCharacteristic (NOTIFY). Subscribing…")
+                
+            case fileActionCharacteristicUUID:
+                self.fileActionCharacteristic = characteristic
             
             default:
                 break
@@ -440,6 +448,27 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
             self.fileContentTransferCompleted = false
         }
     }
+    
+    func deleteArduinoSession(named filename: String) {
+        guard let per = connectedPeripheral,
+              let char = fileActionCharacteristic else {
+            print("❌ Cannot delete: missing characteristic or peripheral.")
+            return
+        }
+        let cmd = "DELETE:\(filename)"
+        print("→ Sending delete-command: \(cmd)")
+        per.writeValue(cmd.data(using: .utf8)!,
+                       for: char,
+                       type: .withResponse)
+    }
+    
+    func deleteAllArduinoSessions() {
+        guard let p = connectedPeripheral,
+              let char = fileContentRequestCharacteristic else { return }
+        let cmd = "DELETEALL"
+        p.writeValue(Data(cmd.utf8), for: char, type: .withResponse)
+      }
 
 }
+
 
