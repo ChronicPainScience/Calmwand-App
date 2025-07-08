@@ -8,110 +8,146 @@ struct ArduinoFileListView: View {
     @State private var isImporting = false
     @State private var totalSeconds: Int = 0    // total expected seconds of session
     @State private var showDeleteAllAlert = false
+    
+    @State private var pendingSessionNumber: Int? = nil
+    
+    private var existingIds: Set<Int> {
+        Set(sessionViewModel.sessionArray.map { $0.sessionNumber })
+    }
 
     /// 1) Precompute the filtered list of “data…” entries
-    private var sessionEntries: [String] {
-        bluetoothManager.arduinoFileList
-            .compactMap { entry in
-                // 1a) Must start “data”
-                guard entry.lowercased().hasPrefix("data") else { return nil }
-                // 1b) Split off the “:XX” minutes piece
-                let parts = entry.split(separator: ":")
-                guard parts.count > 1,
-                      let mins = Int(parts[1]),
-                      mins >= 2                    // only 2+ minutes
-                else { return nil }
-                return entry
-            }
+    private var sessionEntries: [(filename: String, minutes: Int)] {
+      // parse and drop any malformed / too‐short:
+      let tuples = bluetoothManager.arduinoFileList.compactMap { raw -> (String,Int)? in
+        let comps = raw.components(separatedBy: ":")
+        guard
+          comps.count >= 3,
+          let sid  = Int(comps[0]),                // ← sessionNumber
+          !existingIds.contains(sid),              // ← skip if phone already has it
+          let mins = Int(comps.last!),
+          mins >= 2,                           // only ≥4 min
+          comps[1].lowercased().hasPrefix("data")
+        else { return nil }
+
+        return (comps[1], mins)
+      }
+
+      // dedupe by filename (last one wins):
+      var dict = [String:Int]()
+      for (name, mins) in tuples {
+        dict[name] = mins
+      }
+
+      return dict
+        .map { (filename: $0.key, minutes: $0.value) }
+        .sorted { $0.filename < $1.filename }
     }
 
     var body: some View {
-        NavigationView {
-            VStack {
-                if sessionEntries.isEmpty {
-                    Text("Fetching sessions…")
-                        .foregroundColor(.secondary)
-                        .padding()
-                }
+      NavigationView {
+        VStack {
+          if sessionEntries.isEmpty {
+            Text("Fetching sessions…")
+              .foregroundColor(.secondary)
+              .padding()
+          }
 
-                List(sessionEntries, id: \.self) { entry in
-                    ArduinoFileRow(
-                        entry: entry,
-                        isImporting: $isImporting,
-                        totalSeconds: $totalSeconds,
-                        onDelete: { name in
-                              // tell Arduino to delete
-                              bluetoothManager.deleteArduinoSession(named: name)
-                              // instantly remove it from *this* list:
-                              bluetoothManager.arduinoFileList.removeAll { entry in
-                                // drop anything whose “dataX:” prefix matches
-                                entry.hasPrefix(name + ":")
-                            }
-                        },
-                        onSelect: { name, mins in
-                            guard !isImporting else { return }
-                            isImporting = true
-                            totalSeconds = mins * 60
-                            bluetoothManager.arduinoFileContentLines.removeAll()
-                            bluetoothManager.fileContentTransferCompleted = false
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                bluetoothManager.requestArduinoFile(fileName: name)
-                            }
-                        }
-                    )
+          List(sessionEntries, id: \.filename) { entry in
+            HStack {
+              // when you tap the filename row:
+              Button {
+                guard !isImporting else { return }
+                isImporting = true
+                totalSeconds = entry.minutes * 60
+                bluetoothManager.arduinoFileContentLines.removeAll()
+                bluetoothManager.fileContentTransferCompleted = false
+                
+                  pendingSessionNumber = Int(
+                      entry.filename
+                          .dropFirst(4)      // strip “data”
+                          .dropLast(4)       // strip “.txt”
+                  )
+                  
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                  bluetoothManager.requestArduinoFile(fileName: entry.filename)
                 }
+              } label: {
+                HStack {
+                  Text(entry.filename)    // now “DATA48.TXT”
+                  Spacer()
+                  Text("(\(entry.minutes) min)")
+                    .foregroundColor(.secondary)
+                }
+                .contentShape(Rectangle())
+              }
 
-                if isImporting {
-                    let linesSoFar = bluetoothManager.arduinoFileContentLines.count
-                    ProgressView("Importing…", value: Double(linesSoFar), total: Double(totalSeconds))
-                        .padding()
-                    Text("\(min(linesSoFar/60, totalSeconds/60)) of \(totalSeconds/60) min")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+              // swipe to delete
+              .swipeActions(edge: .trailing) {
+                Button(role: .destructive) {
+                  bluetoothManager.deleteArduinoSession(named: entry.filename)
+                  // remove locally any raw that began with that filename + “:”
+                  bluetoothManager.arduinoFileList.removeAll {
+                    $0.hasPrefix(entry.filename + ":")
+                  }
+                } label: {
+                  Label("Delete", systemImage: "trash")
                 }
+              }
             }
-            .navigationTitle("Arduino SD Sessions")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        bluetoothManager.cancelFileImport()
-                        isImporting = false
-                        isPresented = false
-                    }
-                }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(role: .destructive) {
-                        showDeleteAllAlert = true
-                    } label: {
-                        Label("Delete All", systemImage: "trash")
-                    }
-                    .disabled(sessionEntries.isEmpty)
-                }
-            }
-            .alert("Delete all sessions on device?", isPresented: $showDeleteAllAlert) {
-                Button("Delete All", role: .destructive) {
-                    bluetoothManager.deleteAllArduinoSessions()
-                    bluetoothManager.arduinoFileList.removeAll()
-                }
-                Button("Cancel", role: .cancel) { }
-            } message: {
-                Text("This will permanently remove every session file from the Arduino's SD card.")
-            }
-            .onReceive(bluetoothManager.$fileContentTransferCompleted) { done in
-                if done && isImporting {
-                    importSessionFromLines()
-                    isPresented = false
-                    isImporting = false
-                }
-            }
-            .onAppear {
-                bluetoothManager.requestArduinoFileList()
-            }
+          }
+
+          if isImporting {
+            let linesSoFar = bluetoothManager.arduinoFileContentLines.count
+            ProgressView("Importing…", value: Double(linesSoFar), total: Double(totalSeconds))
+              .padding()
+            Text("\(min(linesSoFar/60, totalSeconds/60)) of \(totalSeconds/60) min")
+              .font(.caption)
+              .foregroundColor(.secondary)
+          }
         }
+        .navigationTitle("Arduino SD Sessions")
+        .toolbar {
+          ToolbarItem(placement: .cancellationAction) {
+            Button("Cancel") {
+              bluetoothManager.cancelFileImport()
+              isImporting = false
+              isPresented = false
+            }
+          }
+          ToolbarItem(placement: .navigationBarLeading) {
+            Button(role: .destructive) {
+              showDeleteAllAlert = true
+            } label: {
+              Label("Delete All", systemImage: "trash")
+            }
+            .disabled(sessionEntries.isEmpty)
+          }
+        }
+        .alert("Delete all sessions on device?", isPresented: $showDeleteAllAlert) {
+          Button("Delete All", role: .destructive) {
+            bluetoothManager.deleteAllArduinoSessions()
+            bluetoothManager.arduinoFileList.removeAll()
+          }
+          Button("Cancel", role: .cancel) { }
+        } message: {
+          Text("This will permanently remove every session file from the Arduino's SD card.")
+        }
+        .onReceive(bluetoothManager.$fileContentTransferCompleted) { done in
+          if done && isImporting {
+              if let num = pendingSessionNumber {
+                importSessionFromLines(sessionNumber: num)
+              }
+              isPresented = false
+              isImporting = false
+          }
+        }
+        .onAppear {
+          bluetoothManager.requestArduinoFileList()
+        }
+      }
     }
-
     /// Parses the lines, removes outliers, does regression, creates a SessionModel
-    private func importSessionFromLines() {
+    private func importSessionFromLines(sessionNumber: Int) {
         let rawLines = bluetoothManager.arduinoFileContentLines
         print("🔍 importSessionFromLines(): got \(rawLines.count) total lines")
 
@@ -216,9 +252,11 @@ struct ArduinoFileListView: View {
         // 7) Inhale/exhale times from BLE strings
         let inh = (Double(bluetoothManager.inhaleData) ?? 0) / 1000.0
         let exh = (Double(bluetoothManager.exhaleData) ?? 0) / 1000.0
-
-        // 8) Append
+        
+        let kAbs = abs(k)
+        
         let newSession = SessionModel(
+            sessionNumber: sessionNumber,
             duration:         durationSec,
             temperatureChange: tempChange,
             tempSetData:      filteredTemps,
@@ -226,14 +264,27 @@ struct ArduinoFileListView: View {
             exhaleTime:       exh,
             regressionA:      A,
             regressionB:      B,
-            regressionk:      k,
+            regressionk:      kAbs,
             score:            score
         )
-        sessionViewModel.sessionArray.append(newSession)
+        if !sessionViewModel.sessionArray.contains(where: { $0.sessionNumber == sessionNumber }) {
+            sessionViewModel.sessionArray.append(newSession)
+        }
         print("SessionViewModel now has \(sessionViewModel.sessionArray.count) sessions")
 
         isImporting = false
     }
+}
+
+// 1) Define a little helper type
+struct ArduinoSessionEntry: Identifiable {
+  let id: Int        // sessionId
+  let filename: String
+  let minutes: Int
+
+  // Conform to Identifiable
+  var identity: String { "\(id)-\(filename)" }
+  var identifiableID: String { identity }
 }
 
 
@@ -246,11 +297,13 @@ struct ArduinoFileRow: View {
     let onSelect: (String, Int) -> Void
 
     var body: some View {
+        // Split "dataX:YY" into name and minutes
         let parts = entry.split(separator: ":")
-        let name  = String(parts[0])
-        let mins  = parts.count > 1 ? Int(parts[1]) ?? 0 : 0
+        let name = String(parts[0])
+        let mins = parts.count > 1 ? Int(parts[1]) ?? 0 : 0
 
         Button {
+            guard !isImporting else { return }
             onSelect(name, mins)
         } label: {
             HStack {
@@ -261,13 +314,14 @@ struct ArduinoFileRow: View {
             }
             .contentShape(Rectangle())
         }
+        .disabled(isImporting)
         .swipeActions(edge: .trailing) {
-                    Button(role: .destructive) {
-                        onDelete(name)
-                    } label: {
-                        Label("Delete", systemImage: "trash")
-                    }
-                }
+            Button(role: .destructive) {
+                onDelete(name)
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+        }
     }
 }
 

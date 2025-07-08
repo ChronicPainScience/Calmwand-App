@@ -145,8 +145,14 @@ struct SessionSummary: View {
                             let tempChange = calculateTemperatureChange(tempSet: currentSessionModel.temperatureSet)
                             let currentInhaleTime = (Double(bluetoothManager.inhaleData) ?? 4000) / 1000
                             let currentExhaleTime = (Double(bluetoothManager.exhaleData) ?? 9500) / 1000
-                            
+                            guard let sid = currentSessionModel.sessionId else {
+                              // if we didn’t receive an ID from the Arduino, bail out or assign a fallback
+                              print("❗️No session ID received, cannot add session.")
+                              return
+                            }
+
                             sessionViewModel.addSession(
+                                sessionId: sid,
                                 dur: currentSessionModel.timeElapsed,
                                 tempC: tempChange,
                                 inhale: currentInhaleTime,
@@ -162,10 +168,12 @@ struct SessionSummary: View {
                             buttonImageName = "play.circle"
                             sessionCompleted = true
                         } else {
+                            bluetoothManager.startArduinoSession()
                             startSession()
                             sessionStatus = "End Session"
                             buttonImageName = "pause.circle"
                         }
+                        
                     }
                 }) {
                     HStack {
@@ -212,6 +220,9 @@ struct SessionSummary: View {
                // .padding(.bottom, 20)
             }
             .applyBackgroundGradient()
+        }
+        .onReceive(bluetoothManager.$sessionId.compactMap { $0 }) { newId in
+          currentSessionModel.sessionId = newId
         }
         .onAppear {
                     OrientationLock.mask = .portrait

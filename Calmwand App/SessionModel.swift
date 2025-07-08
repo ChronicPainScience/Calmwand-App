@@ -4,10 +4,15 @@
 //
 //  Created by hansma lab on 5/12/25.
 //
-
+/*
+import Foundation
 
 struct SessionModel: Identifiable, Codable {
-    var id        = UUID()
+    let sessionId: Int
+    
+    let sessionNumber: Int   
+    
+    var id: Int { sessionId }
     var timestamp = Date()          // ← NEW field
 
     let duration: Int
@@ -17,3 +22,4 @@ struct SessionModel: Identifiable, Codable {
     let exhaleTime: Double
     // … regression stuff …
 }
+*/

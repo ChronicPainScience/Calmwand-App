@@ -249,6 +249,9 @@ struct DetailedView: View {
                 Text("Hand Temperature vs. Time")
                     .font(.title)
                     .fontWeight(.bold)
+                Text("Session #\(session.sessionNumber)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
                     .padding(.top, 20)
                 
                 PlotView(
@@ -366,6 +369,7 @@ struct DetailedView: View {
     
     struct DetailedView_Previews: PreviewProvider {
         @State static var session = SessionModel(
+            sessionNumber: 0,
             duration: 60,
             temperatureChange: 2.5,
             tempSetData: [94.0, 94.2, 94.5, 94.8],

@@ -9,7 +9,13 @@ import SwiftUI
 import Foundation
 
 struct SessionModel: Identifiable, Codable{
-    var id = UUID()
+    
+    // MARK: - stored properties
+    
+    let sessionNumber: Int
+    
+    var id: Int { sessionNumber }
+    
     let duration: Int // session time in seconds
     let temperatureChange: Double // temperature change during the session in Fahrenheit
     let tempSetData: [Double] // Array of temp data in Fahrenheit
@@ -23,6 +29,93 @@ struct SessionModel: Identifiable, Codable{
     var score: Double?
     
     var comment: String = ""
+
+    // MARK: - legacy / custom CodingKeys
+    private enum CodingKeys: String, CodingKey {
+        // new names
+        case sessionNumber, timestamp
+        // unchanged
+        case duration, temperatureChange, tempSetData,
+             inhaleTime, exhaleTime,
+             regressionA, regressionB, regressionk, score, comment
+        // legacy key
+        case legacyId = "id"
+    }
+
+    // MARK: - custom decode that understands BOTH versions
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+
+        // ── sessionNumber (new) or legacy id ──
+        if let num = try c.decodeIfPresent(Int.self, forKey: .sessionNumber) {
+            self.sessionNumber = num
+        } else if let legacy = try c.decodeIfPresent(Int.self, forKey: .legacyId) {
+            self.sessionNumber = legacy
+        } else {
+            throw DecodingError.keyNotFound(
+                CodingKeys.sessionNumber,
+                .init(codingPath: decoder.codingPath,
+                      debugDescription: "No sessionNumber or id key")
+            )
+        }
+
+        // ── assign the rest using `self.` ──
+        self.duration          = try c.decode(Int.self,    forKey: .duration)
+        self.temperatureChange = try c.decode(Double.self, forKey: .temperatureChange)
+        self.tempSetData       = try c.decode([Double].self, forKey: .tempSetData)
+        self.inhaleTime        = try c.decode(Double.self, forKey: .inhaleTime)
+        self.exhaleTime        = try c.decode(Double.self, forKey: .exhaleTime)
+
+        self.regressionA       = try c.decodeIfPresent(Double.self, forKey: .regressionA)
+        self.regressionB       = try c.decodeIfPresent(Double.self, forKey: .regressionB)
+        self.regressionk       = try c.decodeIfPresent(Double.self, forKey: .regressionk)
+        self.score             = try c.decodeIfPresent(Double.self, forKey: .score)
+        self.comment           = try c.decodeIfPresent(String.self, forKey: .comment) ?? ""
+    }
+    // MARK: - encoder
+    
+    func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(sessionNumber,       forKey: .sessionNumber)
+        try c.encode(duration,            forKey: .duration)
+        try c.encode(temperatureChange,   forKey: .temperatureChange)
+        try c.encode(tempSetData,         forKey: .tempSetData)
+        try c.encode(inhaleTime,          forKey: .inhaleTime)
+        try c.encode(exhaleTime,          forKey: .exhaleTime)
+        try c.encodeIfPresent(regressionA, forKey: .regressionA)
+        try c.encodeIfPresent(regressionB, forKey: .regressionB)
+        try c.encodeIfPresent(regressionk, forKey: .regressionk)
+        try c.encodeIfPresent(score,       forKey: .score)
+        try c.encode(comment,             forKey: .comment)
+        // no need to write legacyId
+    }
+    
+    // MARK: - convenience init for app code
+    init(sessionNumber: Int,
+         duration: Int,
+         temperatureChange: Double,
+         tempSetData: [Double],
+         inhaleTime: Double,
+         exhaleTime: Double,
+         regressionA: Double? = nil,
+         regressionB: Double? = nil,
+         regressionk: Double? = nil,
+         score: Double? = nil,
+         comment: String = "",
+         timestamp: Date = Date()) {
+
+        self.sessionNumber     = sessionNumber
+        self.duration          = duration
+        self.temperatureChange = temperatureChange
+        self.tempSetData       = tempSetData
+        self.inhaleTime        = inhaleTime
+        self.exhaleTime        = exhaleTime
+        self.regressionA       = regressionA
+        self.regressionB       = regressionB
+        self.regressionk       = regressionk
+        self.score             = score
+        self.comment           = comment
+    }
 }
 
 class SessionViewModel: ObservableObject {
@@ -89,26 +182,21 @@ class SessionViewModel: ObservableObject {
         return (A, B, k)
     }
     
-    func calculateScore(A: Double, B: Double, k: Double, sessionDuration: Int) -> Double {
-        let t = Double(sessionDuration) // session time
-        // predicted temp increase
-        let predictedIncrease = B * (1 - exp(-k * t))
-        
-        // ideal temp increment
-        let idealIncrease = 5.0
-        let powerIndexforTemp = 0.15 //as power index becomes smaller, the score will vary less
-        
-        let relaxFactor = min(pow(predictedIncrease / idealIncrease, powerIndexforTemp), 1.0)
-        
-        let idealk = 0.0050
-        let powerIndexfork = 0.15
-        let speedFactor = min(pow(k / idealk, powerIndexfork), 1.0)
-        
-        // maximum score (user must do as least 10 min session)
-        let sessionMinutes = t / 60.0
-        let maxScore = min(sessionMinutes * 10, 100)
-        
-        return maxScore * relaxFactor * speedFactor
+    func calculateScore(A: Double, B: Double, k: Double, sessionDuration: Int) -> Double? {
+
+        let kAbs = abs(k)                       // use magnitude
+        let t    = Double(sessionDuration)
+
+        // temperature increase cannot be negative
+        let predictedIncrease = max(B * (1 - exp(-kAbs * t)), 0)
+
+        let relaxFactor = min(pow(predictedIncrease / 5.0, 0.15), 1.0)
+        let speedFactor = min(pow(kAbs / 0.0050, 0.15), 1.0)
+
+        let maxScore = min((t / 60) * 10, 100)
+
+        let score = maxScore * relaxFactor * speedFactor
+        return score.isFinite ? score : nil
     }
     
     func updateAllSessions() {
@@ -132,34 +220,54 @@ class SessionViewModel: ObservableObject {
         }
     }
     
-    func addSession(dur: Int, tempC: Double, inhale: Double, exhale: Double, Set: [Double]) {
+    func addSession(sessionId: Int, dur: Int, tempC: Double, inhale: Double, exhale: Double, Set: [Double]) {
         guard let (A, B, k) = calculateRegressionParameters(duration: dur, tempSet: Set) else {
             print("Failed to calculate regression parameters.")
             return
         }
-        
+        let kAbs = abs(k)
         let score = calculateScore(A: A, B: B, k: k, sessionDuration: dur)
         
-        let userInputSession = SessionModel(
-            duration: dur,
+        // ① compute the raw score
+        let rawScore = calculateScore(A: A, B: B, k: k, sessionDuration: dur)
+
+        // ② make it “safe” by turning any non-finite into nil
+        let safeScore: Double? = (rawScore?.isFinite == true) ? rawScore : nil
+        
+        let newSession = SessionModel(
+            sessionNumber:         sessionId,
+            duration:          dur,
             temperatureChange: tempC,
-            tempSetData: Set,
-            inhaleTime: inhale,
-            exhaleTime: exhale,
-            regressionA: A,
-            regressionB: B,
-            regressionk: k,
-            score: score
+            tempSetData:       Set,
+            inhaleTime:        inhale,
+            exhaleTime:        exhale,
+            regressionA:       A,
+            regressionB:       B,
+            regressionk:       kAbs,
+            score:             safeScore,
+            comment:           ""
         )
-        sessionArray.append(userInputSession)
+
+        sessionArray.append(newSession)
     }
     
     private func saveSessions() {
+        // 1) Map each session to a sanitized copy
+        let sanitized = sessionArray.map { original -> SessionModel in
+            var s = original
+            s.score        = s.score?.finiteOrNil
+            s.regressionA  = s.regressionA?.finiteOrNil
+            s.regressionB  = s.regressionB?.finiteOrNil
+            s.regressionk  = s.regressionk?.finiteOrNil
+            return s
+        }
+
+        // 2) Encode & write
         do {
-            let data = try JSONEncoder().encode(sessionArray)
+            let data = try JSONEncoder().encode(sanitized)
             UserDefaults.standard.set(data, forKey: "sessionArray")
         } catch {
-            print("Failed to save sessions: \(error)")
+            print("Failed to save sessions after sanitizing: \(error)")
         }
     }
     
@@ -185,6 +293,7 @@ class SessionViewModel: ObservableObject {
 class CurrentSessionModel: ObservableObject {
     @Published var temperatureSet: [Double] = []
     @Published var timeElapsed: Int = 0
+    @Published var sessionId: Int? = nil
 }
 
 
@@ -193,5 +302,10 @@ class UserSettingsModel: ObservableObject {
     
     @Published var interval: Int = 5
     @Published var isCelcius:Bool = false
+}
+
+private extension Double {
+    /// Returns `nil` if the value is not a finite number.
+    var finiteOrNil: Double? { isFinite ? self : nil }
 }
 

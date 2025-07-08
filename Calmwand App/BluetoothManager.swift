@@ -20,6 +20,8 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     @Published var inhaleData: String = ""
     @Published var exhaleData: String = ""
     @Published var motorStrengthData: String = ""
+    
+    @Published var sessionId: Int? = nil
 
     // CoreBluetooth
     var centralManager: CBCentralManager!
@@ -43,7 +45,8 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     
     let fileActionCharacteristicUUID = CBUUID(string: "87f23fe2-4b42-11ed-bdc3-0242ac120013")
 
-
+    let sessionIdCharacteristicUUID = CBUUID(string: "87f23fe2-4b42-11ed-bdc3-0242ac120014")
+    private var sessionIdCharacteristic: CBCharacteristic?
 
     private var brightnessCharacteristic: CBCharacteristic?
     private var temperatureCharacteristic: CBCharacteristic?
@@ -179,7 +182,8 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
                                                     fileNameCharacteristicUUID,
                                                     fileContentRequestCharacteristicUUID,
                                                     fileContentCharacteristicUUID,
-                                                    fileActionCharacteristicUUID],
+                                                    fileActionCharacteristicUUID,
+                                                    sessionIdCharacteristicUUID],
                                                    for: service)
             }
         }
@@ -241,6 +245,10 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
                 
             case fileActionCharacteristicUUID:
                 self.fileActionCharacteristic = characteristic
+                
+            case sessionIdCharacteristicUUID:
+                self.sessionIdCharacteristic = characteristic
+                peripheral.setNotifyValue(true, for: characteristic)
             
             default:
                 break
@@ -345,6 +353,15 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
                     }
                 }
             }
+        else if characteristic.uuid == sessionIdCharacteristicUUID {
+            if let data = characteristic.value,
+                let str  = String(data: data, encoding: .utf8),
+                let id   = Int(str.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                    DispatchQueue.main.async {
+                        self.sessionId = id
+                    }
+                }
+        }
     }
 
     // MARK: - sending values to arduino
@@ -468,6 +485,18 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         let cmd = "DELETEALL"
         p.writeValue(Data(cmd.utf8), for: char, type: .withResponse)
       }
+    
+    func startArduinoSession() {
+            guard let peripheral = connectedPeripheral,
+                  let actionChar = fileActionCharacteristic else {
+                print("⚠️ Cannot start session: missing characteristic or peripheral.")
+                return
+            }
+            let cmd = "START"
+            guard let data = cmd.data(using: .utf8) else { return }
+            print("→ Writing ‘START’ to Arduino…")
+            peripheral.writeValue(data, for: actionChar, type: .withResponse)
+        }
 
 }
 
