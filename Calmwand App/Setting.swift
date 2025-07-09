@@ -32,7 +32,7 @@ struct SettingView: View {
                                                 Image(systemName: "info.circle")
                                                     .font(.system(size: 24))
                                                     .foregroundColor(.blue)
-                                                Text("How to Use & About")
+                                                Text("Contact & About")
                                                     .font(.headline)
                                             }
                                             .padding(.vertical, 8)
@@ -172,12 +172,7 @@ struct SettingView: View {
             .applyBackgroundGradient()
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.automatic)
-            .navigationBarItems(
-                trailing: NavigationLink(destination: AccountView()) {
-                    Image(systemName: "person.fill")
-                        .foregroundColor(.gray)
-                }
-            )
+            
         }
         .onAppear {
                     OrientationLock.mask = .portrait

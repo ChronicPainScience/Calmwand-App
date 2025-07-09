@@ -13,17 +13,6 @@ struct InfoView: View {
     var body: some View {
         NavigationView {
             List {
-                // ─── How to Use link ────────────────────────
-                Section {
-                    NavigationLink(destination: HowToUseView()) {
-                        HStack {
-                            Image(systemName: "book.fill")
-                                .foregroundColor(.blue)
-                            Text("How to Use")
-                                .font(.headline)
-                        }
-                    }
-                }
                 Section(header: Text("Contact")) {
                     Text("For any issues or inquiries, please contact:")
                         .font(.subheadline)
@@ -43,13 +32,28 @@ struct InfoView: View {
                         .foregroundColor(.primary)
                         .padding(.vertical, 10)
                 }
-                
-                Section(header: Text("Use Guide")) {
-                    // Placeholder for your use guide text.
-                    Text("Use guide information goes here.")
-                        .foregroundColor(.primary)
-                        .padding(.vertical, 10)
+                Section(header: Text("Technical Information")) {
+                    Text("""
+                    Index   Temperature Range (°F)   RGB
+                    0       70.00 – 72.15            Gray
+                    1       72.15 – 74.31            Dark purple
+                    2       74.31 – 76.46            Red
+                    3       76.46 – 78.62            Orange-red
+                    4       78.62 – 80.77            Orange
+                    5       80.77 – 82.92            Yellow
+                    6       82.92 – 85.08            Yellow-green
+                    7       85.08 – 87.23            Green
+                    8       87.23 – 89.38            Green-cyan
+                    9       89.38 – 91.54            Cyan
+                    10      91.54 – 93.69            Blue
+                    11      93.69 – 95.85            Indigo
+                    12      95.85 – 98.00            Violet
+                    13      > 98.00                  White (upper cap)
+                    """)
+                    .font(.system(.caption2, design: .monospaced))
+                    .multilineTextAlignment(.leading)
                 }
+                
             }
             .listStyle(GroupedListStyle())
             .navigationTitle("Info")
