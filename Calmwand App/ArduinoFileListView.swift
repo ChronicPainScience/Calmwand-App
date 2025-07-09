@@ -16,31 +16,33 @@ struct ArduinoFileListView: View {
     }
 
     /// 1) Precompute the filtered list of “data…” entries
-    private var sessionEntries: [(filename: String, minutes: Int)] {
+    private var sessionEntries: [(sessionNumber: Int, filename: String, minutes: Int)] {
       // parse and drop any malformed / too‐short:
-      let tuples = bluetoothManager.arduinoFileList.compactMap { raw -> (String,Int)? in
-        let comps = raw.components(separatedBy: ":")
-        guard
-          comps.count >= 3,
-          let sid  = Int(comps[0]),                // ← sessionNumber
-          !existingIds.contains(sid),              // ← skip if phone already has it
-          let mins = Int(comps.last!),
-          mins >= 2,                           // only ≥4 min
-          comps[1].lowercased().hasPrefix("data")
-        else { return nil }
+        let tuples = bluetoothManager.arduinoFileList.compactMap { raw -> (Int, String, Int)? in
+            let comps = raw.components(separatedBy: ":")          // "42:DATA42.TXT:12"
+            guard
+                comps.count >= 3,
+                let sid  = Int(comps[0]),                         // numeric session id
+                !existingIds.contains(sid),
+                let mins = Int(comps[2]),
+                mins >= 2,
+                comps[1].lowercased().hasPrefix("data")
+            else { return nil }
 
-        return (comps[1], mins)
-      }
+            return (sid, comps[1], mins)                          // (42, "DATA42.TXT", 12)
+        }
 
       // dedupe by filename (last one wins):
-      var dict = [String:Int]()
-      for (name, mins) in tuples {
-        dict[name] = mins
-      }
+      var dict = [Int:(String,Int)]()               // key = sid
+        for (sid, name, mins) in tuples {
+            dict[sid] = (name, mins)                  // last one wins if duplicate
+        }
 
-      return dict
-        .map { (filename: $0.key, minutes: $0.value) }
-        .sorted { $0.filename < $1.filename }
+        return dict
+            .sorted { $0.key < $1.key }               // sort by sessionNumber
+            .map { (sessionNumber: $0.key,
+                    filename:       $0.value.0,
+                    minutes:        $0.value.1) }
     }
 
     var body: some View {
@@ -52,7 +54,7 @@ struct ArduinoFileListView: View {
               .padding()
           }
 
-          List(sessionEntries, id: \.filename) { entry in
+            List(sessionEntries, id: \.sessionNumber) { entry in
             HStack {
               // when you tap the filename row:
               Button {
@@ -324,4 +326,3 @@ struct ArduinoFileRow: View {
         }
     }
 }
-
