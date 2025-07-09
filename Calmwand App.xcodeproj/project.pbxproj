@@ -33,6 +33,7 @@
 		3997270A2DF0CFD800CB88C7 /* ArduinoFileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399727092DF0CFD800CB88C7 /* ArduinoFileListView.swift */; };
 		39A44BAE2DC92CB5001C4875 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A44BAD2DC92CB5001C4875 /* SplashScreenView.swift */; };
 		39A8B3E72D77A92300C50DD6 /* TenMinuteTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A8B3E62D77A92300C50DD6 /* TenMinuteTimerView.swift */; };
+		39C8E4E92E1F26E90022E190 /* Bundle.swift in Resources */ = {isa = PBXBuildFile; fileRef = 39C8E4E82E1F26E90022E190 /* Bundle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +67,7 @@
 		399727092DF0CFD800CB88C7 /* ArduinoFileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArduinoFileListView.swift; sourceTree = "<group>"; };
 		39A44BAD2DC92CB5001C4875 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		39A8B3E62D77A92300C50DD6 /* TenMinuteTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TenMinuteTimerView.swift; sourceTree = "<group>"; };
+		39C8E4E82E1F26E90022E190 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -118,6 +120,7 @@
 				11D9C0352C9114AC00173479 /* Session Summary.swift */,
 				39A8B3E62D77A92300C50DD6 /* TenMinuteTimerView.swift */,
 				11D9C0332C91134B00173479 /* Setting.swift */,
+				39C8E4E82E1F26E90022E190 /* Bundle.swift */,
 				11D9C0312C91132000173479 /* Session History.swift */,
 				11D9BFC62C87C05900173479 /* Item.swift */,
 				11AB481B2D66FCCD00E1FDB8 /* CSVDocument.swift */,
@@ -205,6 +208,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39C8E4E92E1F26E90022E190 /* Bundle.swift in Resources */,
 				11D9BFCC2C87C05A00173479 /* Preview Assets.xcassets in Resources */,
 				11D9BFC92C87C05A00173479 /* Assets.xcassets in Resources */,
 			);

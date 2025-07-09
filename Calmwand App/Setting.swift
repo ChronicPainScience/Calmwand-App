@@ -23,6 +23,8 @@ struct SettingView: View {
     @State var exhaleTime: Float = 9.0
     @State var motorStrength: Float = 180
     
+    @State private var showEgg: Bool = false
+    
     var body: some View {
         NavigationView {
             List {
@@ -36,7 +38,48 @@ struct SettingView: View {
                                                     .font(.headline)
                                             }
                                             .padding(.vertical, 8)
+                                            .onLongPressGesture(minimumDuration: 3.0) {
+                                                    withAnimation { showEgg.toggle() }          // showEgg is a @State Bool
+                                                }
                                         }
+                    .sheet(isPresented: $showEgg) {
+                        VStack(spacing: 20) {
+                            Text("Hello!")
+                                .font(.title)
+                                .bold()
+                            Text("""
+                            🪄  Congratulations, traveler!  
+                            You’ve just uncovered the **Super-Secret Calmwand Credits Screen**.
+
+                            This entire app was hand-crafted by **Niketh**:
+                            • Besties with Claude  
+                            • Code Whisperer  
+                            • Professional Yerba Mate Consumer  
+                            • World-Record Holder for Longest Breath Held 
+                              While Waiting for Xcode to Re-index 
+                              (unverified)
+
+                            Fun facts:
+                            🫧  Lines of Swift written: \(Int.random(in: 5_000...9_999)) 
+                            👌🏻  Lines of Swift properly commented: 0
+                            🪄  Bugs intentionally left so future archaeologists have something to do: 3.14  
+                            🐛  Actual bugs squashed during development: 3 (2 on the keyboard, 1 inside the calmwand?!)  
+                            🧘‍♂️  Deep breaths taken to stay calm during Bluetooth debugging: …lost count.
+
+                            Remember: if at first you don’t succeed, inhale for 4 s, exhale for 8 s, and try turning it off and on again.
+
+                            Thank you for exploring Calmwand!  
+                            Now exhale… close this screen and go away.
+                            """)
+                            .font(.caption.monospaced())            // fun tiny console-style text
+                            .multilineTextAlignment(.leading)
+                            .padding()
+                            //Text("Version \(Bundle.main.versionString) (\(Bundle.main.buildNumber))")
+                                .font(.caption)
+                            Spacer()
+                        }
+                        .padding()
+                    }
                    /* NavigationLink(destination: AccountView()) {
                         HStack(spacing: 12) {
                             Image(systemName: "person.crop.circle")
