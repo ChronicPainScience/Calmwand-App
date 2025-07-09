@@ -11,6 +11,11 @@ struct ArduinoFileListView: View {
     
     @State private var pendingSessionNumber: Int? = nil
     
+    @State private var importQueue: [(sessionNumber: Int,
+                                      filename: String,
+                                      minutes: Int)] = []
+    @State private var currentImportIndex: Int = 0        // progress through the queue
+    
     private var existingIds: Set<Int> {
         Set(sessionViewModel.sessionArray.map { $0.sessionNumber })
     }
@@ -124,6 +129,17 @@ struct ArduinoFileListView: View {
             }
             .disabled(sessionEntries.isEmpty)
           }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    // Build a queue of every *remaining* file
+                    importQueue = sessionEntries                      // already filtered
+                    currentImportIndex = 0
+                    startNextQueuedImport()
+                } label: {
+                    Label("Import All", systemImage: "tray.and.arrow.down.fill")
+                }
+                .disabled(sessionEntries.isEmpty || isImporting)      // grey out if nothing to do
+            }
         }
         .alert("Delete all sessions on device?", isPresented: $showDeleteAllAlert) {
           Button("Delete All", role: .destructive) {
@@ -135,15 +151,17 @@ struct ArduinoFileListView: View {
           Text("This will permanently remove every session file from the Arduino's SD card.")
         }
         .onReceive(bluetoothManager.$fileContentTransferCompleted) { done in
-          if done && isImporting {
-              if let num = pendingSessionNumber {
+            guard done, isImporting else { return }
+
+            if let num = pendingSessionNumber {
                 importSessionFromLines(sessionNumber: num)
-              }
-              isPresented = false
-              isImporting = false
-          }
-        }
-        .onAppear {
+            }
+
+            // move to next file in queue (if any)
+            currentImportIndex += 1
+            isImporting = false
+            startNextQueuedImport()              // recurse to the next file
+        }        .onAppear {
           bluetoothManager.requestArduinoFileList()
         }
       }
@@ -275,6 +293,25 @@ struct ArduinoFileListView: View {
         print("SessionViewModel now has \(sessionViewModel.sessionArray.count) sessions")
 
         isImporting = false
+    }
+    private func startNextQueuedImport() {
+        guard currentImportIndex < importQueue.count else {
+            importQueue.removeAll()                // finished
+            return
+        }
+
+        let entry = importQueue[currentImportIndex]
+
+        isImporting  = true
+        totalSeconds = entry.minutes * 60
+        pendingSessionNumber = entry.sessionNumber   // use sid directly
+
+        bluetoothManager.arduinoFileContentLines.removeAll()
+        bluetoothManager.fileContentTransferCompleted = false
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            bluetoothManager.requestArduinoFile(fileName: entry.filename)
+        }
     }
 }
 
