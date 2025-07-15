@@ -22,10 +22,10 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     @Published var motorStrengthData: String = ""
     
     @Published var sessionId: Int? = nil
-
+    
     // CoreBluetooth
     var centralManager: CBCentralManager!
-    var connectedPeripheral: CBPeripheral?
+    @Published var connectedPeripheral: CBPeripheral?
 
     //service UUID
     let serviceUUID = CBUUID(string: "87f23fe2-4b42-11ed-bdc3-0242ac120000")
@@ -500,4 +500,10 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
 
 }
 
+extension BluetoothManager {
+
+    var connectedDeviceName: String? {
+        connectedPeripheral?.name
+    }
+}
 

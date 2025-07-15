@@ -3,7 +3,7 @@ import PDFKit
 
 struct HowToUseView: View {
     // PDF filename (top‐level bundle)
-    private let pdfName = "useguide"
+    private let pdfName = "organized"
 
     var body: some View {
         Group {

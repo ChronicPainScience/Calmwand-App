@@ -24,10 +24,17 @@ struct SessionSummary: View {
     
     // connect -> connected button
     var connectionLabel: String {
-            if bluetoothManager.isConnected      { return "CONNECTED"  }
-            if bluetoothManager.isConnecting     { return "CONNECTING" }
-            return "CONNECT"
+        if bluetoothManager.isConnected {
+                
+            if let name = bluetoothManager.connectedDeviceName {
+                return "CONNECTED to \(name)"
+            } else {
+                return "CONNECTED"
+            }
         }
+        if bluetoothManager.isConnecting { return "CONNECTING…" }
+        return "CONNECT"
+    }
 
     func startSession() {
         

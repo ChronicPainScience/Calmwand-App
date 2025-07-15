@@ -32,7 +32,7 @@ struct InfoView: View {
                         .foregroundColor(.primary)
                         .padding(.vertical, 10)
                 }
-                Section(header: Text("Technical Information")) {
+                /*Section(header: Text("Technical Information")) {
                     Text("""
                     Index   Temperature Range (°F)   RGB
                     0       70.00 – 72.15            Gray
@@ -52,7 +52,7 @@ struct InfoView: View {
                     """)
                     .font(.system(.caption2, design: .monospaced))
                     .multilineTextAlignment(.leading)
-                }
+                }*/
                 
             }
             .listStyle(GroupedListStyle())
